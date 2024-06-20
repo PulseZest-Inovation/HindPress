@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { Home, Category, Info, Menu, ExitToApp } from '@mui/icons-material';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../utils/FireBase/firebaseConfig'; // Adjust the path as per your project structure
 
 const Sidebar = ({ onItemClick, onLogout }) => {
   const theme = useTheme();
@@ -20,17 +22,17 @@ const Sidebar = ({ onItemClick, onLogout }) => {
     setOpen(!open);
   };
 
-  const handleLogout = () => {
-    // Perform logout actions (e.g., clear session)
-    // Here, we trigger the logout callback passed from parent component 
-    if (onLogout) {
-      onLogout();
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Perform additional logout actions if needed (e.g., clear session)
+      if (onLogout) {
+        onLogout();
+      }
+      window.location.href = '/login'; // Navigate to login page
+    } catch (error) {
+      console.error('Error signing out: ', error);
     }
-  };
-
-  const handleLogoutAndNavigate = () => {
-    handleLogout(); // Perform logout actions
-    window.location.href = '/login'; // Navigate to login page
   };
 
   return (
@@ -62,7 +64,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
               { text: 'Home', icon: <Home />, section: 'home' },
               { text: 'Manage Category', icon: <Category />, section: 'manage-category' },
               { text: 'Info', icon: <Info />, section: 'info' },
-              { text: 'Logout', icon: <ExitToApp />, action: handleLogoutAndNavigate }, // Logout button with navigation
+              { text: 'Logout', icon: <ExitToApp />, action: handleLogout }, // Logout button with Firebase logout
             ].map((item, index) => (
               <ListItem button key={item.text} onClick={item.action || (() => onItemClick(item.section))}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
