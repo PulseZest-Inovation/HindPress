@@ -1,6 +1,6 @@
 import React from 'react';
+import { FaQuestionCircle, FaSearch, FaShoppingCart } from 'react-icons/fa';
 import logo from '../../assets/images/logo.png'; // Ensure the path is correct
-import { FaSearch, FaQuestionCircle, FaUser, FaShoppingCart } from 'react-icons/fa';
 
 const Header = () => {
   return (
