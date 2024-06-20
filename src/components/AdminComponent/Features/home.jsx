@@ -1,20 +1,18 @@
 import React from 'react';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 
 const Home = () => {
   return (
-    <Container maxWidth="md">
-      <Typography variant="h2" align="center" style={{ marginTop: '50px' }}>
+    <div className="max-w-md mx-auto">
+      <h2 className="text-4xl text-center mt-12">
         Welcome to Your Application
-      </Typography>
-      <Typography variant="body1" align="center" style={{ marginTop: '20px' }}>
+      </h2>
+      <p className="text-base text-center mt-6">
         This is your home page content. You can add more sections, features, or information here.
-      </Typography>
-      <Typography variant="body1" align="center" style={{ marginTop: '20px' }}>
+      </p>
+      <p className="text-base text-center mt-6">
         Feel free to customize this page according to your application's needs.
-      </Typography>
-    </Container>
+      </p>
+    </div>
   );
 };
 

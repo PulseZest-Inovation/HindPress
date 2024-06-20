@@ -22,7 +22,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
 
   const handleLogout = () => {
     // Perform logout actions (e.g., clear session)
-    // Here, we trigger the logout callback passed from parent component
+    // Here, we trigger the logout callback passed from parent component 
     if (onLogout) {
       onLogout();
     }
