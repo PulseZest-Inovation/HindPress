@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Sidebar from "../DashBoardFeatures/SideBar/sideBar";
 import ManageCategory from './Features/manageCategory'; // Adjust path as per your project structure
-
+import Home from './Features/home';
 const AdminComponent = () => {
   const [selectedSection, setSelectedSection] = useState(null);
 
@@ -14,7 +14,8 @@ const AdminComponent = () => {
     <div style={styles.container}>
       <Sidebar onItemClick={handleSidebarItemClick} />
       <div style={styles.content}>
-        <h1>Hello Admin</h1>
+     
+        {selectedSection === 'home' && <Home />}
         {selectedSection === 'manage-category' && <ManageCategory />}
       </div>
     </div>

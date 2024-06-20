@@ -28,6 +28,11 @@ const Sidebar = ({ onItemClick, onLogout }) => {
     }
   };
 
+  const handleLogoutAndNavigate = () => {
+    handleLogout(); // Perform logout actions
+    window.location.href = '/login'; // Navigate to login page
+  };
+
   return (
     <div>
       <IconButton
@@ -57,7 +62,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
               { text: 'Home', icon: <Home />, section: 'home' },
               { text: 'Manage Category', icon: <Category />, section: 'manage-category' },
               { text: 'Info', icon: <Info />, section: 'info' },
-              { text: 'Logout', icon: <ExitToApp />, action: handleLogout }, // Logout button
+              { text: 'Logout', icon: <ExitToApp />, action: handleLogoutAndNavigate }, // Logout button with navigation
             ].map((item, index) => (
               <ListItem button key={item.text} onClick={item.action || (() => onItemClick(item.section))}>
                 <ListItemIcon>{item.icon}</ListItemIcon>

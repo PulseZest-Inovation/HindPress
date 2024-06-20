@@ -17,7 +17,7 @@ const LoginComponent = ({ onLogin }) => {
     e.preventDefault();
 
     const auth = getAuth(app);
-
+    
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -80,14 +80,14 @@ const LoginComponent = ({ onLogin }) => {
         </form>
       </div>
       <div style={styles.watermarkContainer}>
-      <div style={{ ...styles.watermark, top: '10%', left: '10%', color: '#000' }}>HIND PRESS</div>
-<div style={{ ...styles.watermark, bottom: '10%', right: '10%', color: '#000' }}>Love from <span style={{ color: 'red' }}>❤ PulseZest</span></div>
-
+        <div style={{ ...styles.watermark, top: '10%', left: '10%', color: '#000' }}>HIND PRESS</div>
+        <div style={{ ...styles.watermark, bottom: '10%', right: '10%', color: '#000' }}>Love from <span style={{ color: 'red' }}>❤ PulseZest</span></div>
       </div>
       <ToastContainer />
     </div>
   );
 };
+
 const styles = {
   container: {
     display: 'flex',
@@ -139,6 +139,7 @@ const styles = {
     fontWeight: 'bold',
     color: '#000',
     zIndex: '-1',
+    textShadow: '1px 1px 2px rgba(0,0,0,0.3)', // Adding a subtle shine effect
   },
 };
 
