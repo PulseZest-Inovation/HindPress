@@ -1,38 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Header from './Component/Header/header';
-import Footer from './Component/footer/footer';
-import Home from './Pages/home';  // Make sure to import the Home component
-import LoginComponent from './Pages/LoginPage/loginPage'; // Adjust path as per your project structure
-import AdminPage from './Pages/AdminPage/adminPage'; // Adjust path as per your project structure
+
+import Home from './Pages/home';
+import LoginComponent from './Pages/LoginPage/loginPage';
+import AdminPage from './Pages/AdminPage/adminPage';
+import CategoryPosts from './Component/CategoriesSection/CategoryPosts'; // Adjust path as per your project structure
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRoles, setUserRoles] = useState([]);
-  const [checkingAuth, setCheckingAuth] = useState(true); // State to track initial authentication check
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check authentication status on component mount (simulate initial auth check)
-    const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true'; // Replace with your actual authentication check
+    const isAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(isAuthenticated);
-    setCheckingAuth(false); // Once checked, set to false
+    setCheckingAuth(false);
   }, []);
 
-  const handleLogin = (roles) => {
+  const handleLogin = () => {
     setIsLoggedIn(true);
-    setUserRoles(roles);
-    localStorage.setItem('isLoggedIn', 'true'); // Store authentication status in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setUserRoles([]);
-    localStorage.removeItem('isLoggedIn'); // Remove authentication status from localStorage on logout
+    localStorage.removeItem('isLoggedIn');
   };
 
   const PrivateRoute = ({ element, allowedRoles }) => {
     if (checkingAuth) {
-      return null; // Render nothing while checking authentication status
+      return null;
     }
 
     if (!isLoggedIn) {
@@ -44,15 +40,11 @@ const App = () => {
 
   const PublicRoute = ({ element, restricted }) => {
     if (checkingAuth) {
-      return null; // Render nothing while checking authentication status
+      return null;
     }
 
     if (isLoggedIn && restricted) {
       return <Navigate to="/admin" />;
-    }
-
-    if (isLoggedIn && !restricted) {
-      return <Navigate to="/admin" />; // Redirect to admin page if already logged in and trying to access /login
     }
 
     return element;
@@ -61,16 +53,14 @@ const App = () => {
   return (
     <div className="min-h-screen text-black">
       <Router>
-        <Header />
         <div className="pt-24">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<PublicRoute element={<LoginComponent onLogin={handleLogin} />} restricted />} />
-            <Route path="/admin" element={<PrivateRoute element={<AdminPage />} allowedRoles={['admin']} />} />
-            {/* Add more routes here as needed */}
+            <Route path="/admin" element={<PrivateRoute element={<AdminPage />} />} />
+            <Route path="/category/:categoryName" element={<CategoryPosts />} /> {/* Updated route with categoryName param */}
           </Routes>
         </div>
-        <Footer />
       </Router>
     </div>
   );
