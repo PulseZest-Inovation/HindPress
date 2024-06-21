@@ -63,8 +63,8 @@ const Sidebar = ({ onItemClick, onLogout }) => {
             {[
               { text: 'Home', icon: <Home />, section: 'home' },
               { text: 'Add Category', icon: <AddAPhoto />, section: 'add-category' },
-              { text: 'Manage Category', icon: <Category />, section: 'manage-category' },
-              { text: 'Manage Filters', icon: <ManageHistory />, section: 'manage-filters' },
+              { text: 'Manage Posts', icon: <Category />, section: 'manage-category' },
+              { text: 'All Posts', icon: <ManageHistory />, section: 'all-category' },
               { text: 'Info', icon: <Info />, section: 'info' },
               { text: 'Logout', icon: <ExitToApp />, action: handleLogout }, // Logout button with Firebase logout
             ].map((item, index) => (

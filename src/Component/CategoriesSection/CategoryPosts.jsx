@@ -70,7 +70,8 @@ const CategoryPosts = () => {
               />
               <CardContent className="p-0 pt-4">
                 <h3 className="text-xl mb-2">{post.name}</h3>
-                <p className="text-sm text-gray-500">Price: ${post.price}</p>
+                <p className="text-sm text-gray-500">Discount Price: ${post.sellingPrice}</p>
+                <p className="text-sm text-gray-500">Actual Price: ${post.actualPrice}</p>
                 <p className="text-sm text-gray-500">{post.description}</p>
               </CardContent>
             </Paper>
