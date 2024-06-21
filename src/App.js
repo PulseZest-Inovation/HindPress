@@ -4,7 +4,8 @@ import Header from './Component/Header/header';
 import Footer from './Component/footer/footer';
 import Home from './Pages/home';  // Make sure to import the Home component
  import LoginPage from './Pages/LoginPage/loginPage' // Adjust path as per your project structure
-import AdminPage from './Pages/AdminPage/adminPage'; // Adjust path as per your project structure
+import AdminPage from './Pages/AdminPage/adminPage';
+import WhatsAppButton from './Component/Whatsapp/Chat'; // Adjust path as per your project structure
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -69,6 +70,7 @@ const App = () => {
             <Route path="/admin" element={<PrivateRoute element={<AdminPage />} allowedRoles={['admin']} />} />
             {/* Add more routes here as needed */}
           </Routes>
+          <WhatsAppButton phoneNumber="9598919119" />
         </div>
         <Footer />
       </Router>

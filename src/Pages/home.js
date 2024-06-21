@@ -6,9 +6,11 @@ import Popular from '../Component/PopularProduct/popular'
 import Print from '../Component/Printo/print'
 import Sign from '../Component/SignsMarketing/sign'
 import State from '../Component/Stationery/state'
+import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead'
 export default function Home() {
   return (
     <div> 
+      <ResponsiveAppBar/>
       <HeroSection/>
       
       <New />
