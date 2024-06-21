@@ -5,24 +5,34 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { motion } from 'framer-motion';
 import React, { useRef, useState } from 'react';
-import DesignGalleryImage1 from '../../assets/images/1.jpg';
-import DesignGalleryImage2 from '../../assets/images/2.jpeg';
-import DesignGalleryImage3 from '../../assets/images/3.jpg';
-import DesignGalleryImage4 from '../../assets/images/4.png';
-import DesignGalleryImage5 from '../../assets/images/5.jpeg';
+import DesignGalleryImage1 from '../../assets/images/l1.webp';
+import DesignGalleryImage10 from '../../assets/images/l10.webp';
+import DesignGalleryImage2 from '../../assets/images/l2.webp';
+import DesignGalleryImage3 from '../../assets/images/l3.webp';
+import DesignGalleryImage4 from '../../assets/images/l4.webp';
+import DesignGalleryImage5 from '../../assets/images/l5.webp';
+import DesignGalleryImage6 from '../../assets/images/l6.webp';
+import DesignGalleryImage7 from '../../assets/images/l7.webp';
+import DesignGalleryImage8 from '../../assets/images/l8.webp';
+import DesignGalleryImage9 from '../../assets/images/l9.webp';
 
 const images = [
-  DesignGalleryImage1,
-  DesignGalleryImage2,
-  DesignGalleryImage3,
-  DesignGalleryImage4,
-  DesignGalleryImage5,
+  { src: DesignGalleryImage1, title: "Rare Rabbit Round Neck T-Shirts" },
+  { src: DesignGalleryImage2, title: "Rare Rabbit Polo T-Shirts" },
+  { src: DesignGalleryImage3, title: "AcrylicWood QR Code Scanner" },
+  { src: DesignGalleryImage4, title: "Rubber Stamp" },
+  { src: DesignGalleryImage5, title: "Photo Pendant Wooden Stand" },
+  { src: DesignGalleryImage6, title: "Standard Acrylic Photo Frames" },
+  { src: DesignGalleryImage7, title: "Photo with Wooden Stand" },
+  { src: DesignGalleryImage8, title: "Employee Joining Kits" },
+  { src: DesignGalleryImage9, title: "Jute Bag" },
+  { src: DesignGalleryImage10, title: "Holographic Stickers" },
 ];
 
 const New = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef(null);
-  const cardWidth = 320; // Define card width + margin
+  const cardWidth = 280; // Define card width + margin
 
   const goToNextSlide = () => {
     if (currentImageIndex < images.length - 1) {
@@ -55,14 +65,14 @@ const New = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center justify-center mb-2"> {/* Adjusted mb-2 */}
         <hr className="border-gray-400 w-1/3" />
         <h2 className="text-center text-3xl font-bold mx-4 text-yellow-500">
           New Launches
         </h2>
         <hr className="border-gray-400 w-1/3" />
       </div>
-      <div className="flex justify-center items-center mb-4">
+      <div className="flex justify-center items-center mb-2"> {/* Adjusted mb-2 */}
         <motion.button
           onClick={goToPrevSlide}
           className={`p-2 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
@@ -72,17 +82,26 @@ const New = () => {
         >
           <KeyboardArrowLeftIcon />
         </motion.button>
-        <div ref={scrollRef} className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full">
+        <div ref={scrollRef} className="overflow-x-hidden overflow-y-hidden flex space-x-2 w-full">
           {images.map((image, index) => (
             <motion.div
               key={index}
-              className="w-80 flex-shrink-0"
-              whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+              className="w-64 flex-shrink-0" // Adjusted width to w-64
+              whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.2, duration: 0.5 }}
             >
               <Card className="h-full">
-                <CardMedia component="img" height="140" image={image} alt={`Image Slide ${index + 1}`} />
+                <CardMedia
+                  component="img"
+                  height="100" // Adjusted height value
+                  image={image.src}
+                  alt={`Image Slide ${index + 1}`}
+                  onError={(e) => e.currentTarget.src = '/fallback.jpg'}
+                />
                 <CardContent>
-                  {/* Add any additional content for the card here */}
+                  <h3 className="text-center">{image.title}</h3>
                 </CardContent>
               </Card>
             </motion.div>

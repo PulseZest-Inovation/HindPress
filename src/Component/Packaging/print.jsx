@@ -5,24 +5,28 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { motion } from 'framer-motion';
 import React, { useEffect, useRef, useState } from 'react';
-import DesignGalleryImage1 from '../../assets/images/1.jpg';
-import DesignGalleryImage2 from '../../assets/images/2.jpeg';
-import DesignGalleryImage3 from '../../assets/images/3.jpg';
-import DesignGalleryImage4 from '../../assets/images/4.png';
-import DesignGalleryImage5 from '../../assets/images/5.jpeg';
+import DesignGalleryImage1 from '../../assets/images/a1.jpg';
+import DesignGalleryImage2 from '../../assets/images/a2.jpg';
+import DesignGalleryImage3 from '../../assets/images/a3.jpg';
+import DesignGalleryImage4 from '../../assets/images/a4.jpg';
+import DesignGalleryImage5 from '../../assets/images/a5.jpg';
+import DesignGalleryImage6 from '../../assets/images/a6.jpg';
+import DesignGalleryImage7 from '../../assets/images/a7.jpg';
 
 const images = [
-  DesignGalleryImage1,
-  DesignGalleryImage2,
-  DesignGalleryImage3,
-  DesignGalleryImage4,
-  DesignGalleryImage5,
+  { src: DesignGalleryImage1, title: "Packaging Labels" },
+  { src: DesignGalleryImage2, title: "Stand Up Pouches" },
+  { src: DesignGalleryImage3, title: "Sleeved Mailer Boxes" },
+  { src: DesignGalleryImage4, title: "Paper Bags" },
+  { src: DesignGalleryImage5, title: "Courier Poly Bags" },
+  { src: DesignGalleryImage6, title: "Packing Tape" },
+  { src: DesignGalleryImage7, title: "Food & Cake Boxes" },
 ];
 
-const Print = () => {
+const Pack = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef(null);
-  const cardWidth = 320; // Define card width + margin
+  const cardWidth = 280; // Adjusted card width + margin
 
   // Use effect to animate scroll on index change
   useEffect(() => {
@@ -71,24 +75,27 @@ const Print = () => {
         </motion.button>
         <div
           ref={scrollRef}
-          className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full smooth-scroll"
-          style={{
-            scrollBehavior: 'smooth',
-          }}
+          className="overflow-x-hidden overflow-y-hidden flex space-x-2 w-full smooth-scroll"
         >
           {images.map((image, index) => (
             <motion.div
               key={index}
-              className="w-80 flex-shrink-0"
+              className="w-64 flex-shrink-0" // Adjusted width to w-64
               whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
               <Card className="h-full">
-                <CardMedia component="img" height="140" image={image} alt={`Image Slide ${index + 1}`} />
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={image.src} // Ensure this is image.src
+                  alt={`Image Slide ${index + 1}`}
+                  onError={(e) => e.currentTarget.src = '/fallback.jpg'} // Example fallback image path
+                />
                 <CardContent>
-                  {/* Add any additional content for the card here */}
+                  <p>{image.title}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -107,4 +114,4 @@ const Print = () => {
   );
 };
 
-export default Print;
+export default Pack;

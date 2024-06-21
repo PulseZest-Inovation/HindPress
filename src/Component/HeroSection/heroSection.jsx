@@ -1,104 +1,99 @@
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { motion, useAnimation } from 'framer-motion';
-import React, { useEffect, useRef, useState } from 'react';
-import DesignGalleryImage1 from '../../assets/images/1.jpg';
-import DesignGalleryImage2 from '../../assets/images/2.jpeg';
-import DesignGalleryImage3 from '../../assets/images/3.jpg';
-import DesignGalleryImage4 from '../../assets/images/4.png';
-import DesignGalleryImage5 from '../../assets/images/5.jpeg';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import DesignGalleryImage1 from '../../assets/images/h1.webp';
+import DesignGalleryImage2 from '../../assets/images/h2.webp';
+import DesignGalleryImage3 from '../../assets/images/h3.webp';
+import DesignGalleryImage4 from '../../assets/images/h4.webp';
+import DesignGalleryImage5 from '../../assets/images/h5.webp';
 
 const images = [
-  DesignGalleryImage1,
-  DesignGalleryImage2,
-  DesignGalleryImage3,
-  DesignGalleryImage4,
-  DesignGalleryImage5,
+  { src: DesignGalleryImage1, alt: 'Image 1', buttonText: 'Explore Now' },
+  { src: DesignGalleryImage2, alt: 'Image 2', buttonText: 'Explore Now' },
+  { src: DesignGalleryImage3, alt: 'Image 3', buttonText: 'Explore Now' },
+  { src: DesignGalleryImage4, alt: 'Image 4', buttonText: 'Explore Now' },
+  { src: DesignGalleryImage5, alt: 'Image 5', buttonText: 'Explore Now' },
 ];
 
-const HeroSection = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const scrollRef = useRef(null);
-  const controls = useAnimation();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#b185db',
+    },
+    secondary: {
+      main: '#421e86',
+    },
+  },
+});
 
-  const cardWidth = 320; // Card width + margin
+const HeroSection = () => {
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    // Animate scrolling on current image index change
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        left: currentImageIndex * cardWidth,
+        left: 0,
         behavior: 'smooth',
       });
     }
-  }, [currentImageIndex]);
-
-  const goToNextSlide = () => {
-    const newIndex = Math.min(currentImageIndex + 1, images.length - 1);
-    controls.start({ x: `-${newIndex * cardWidth}px` });
-    setCurrentImageIndex(newIndex);
-  };
-
-  const goToPrevSlide = () => {
-    const newIndex = Math.max(currentImageIndex - 1, 0);
-    controls.start({ x: `-${newIndex * cardWidth}px` });
-    setCurrentImageIndex(newIndex);
-  };
+  }, []);
 
   return (
-    <motion.div
-      className="section-content bg-purple-950 text-white py-8"
-      initial={{ x: '-100vw', opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 50 }}
-    >
-      <div className="flex justify-center items-center mb-4 space-x-4">
-        <motion.button
-          onClick={goToPrevSlide}
-          className={`p-2 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <KeyboardArrowLeftIcon />
-        </motion.button>
-        <div
-          ref={scrollRef}
-          className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full smooth-scroll"
-          style={{
-            scrollBehavior: 'smooth',
-          }}
-        >
-          {images.map((image, index) => (
-            <motion.div
-              key={index}
-              className="w-80 flex-shrink-0"
-              whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-            >
-              <Card className="h-full">
-                <CardMedia component="img" height="140" image={image} alt={`Image Slide ${index + 1}`} />
-                <CardContent>
-                  {/* Add any additional content for the card here */}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+    <ThemeProvider theme={theme}>
+      <motion.div
+        className="section-content text-white py-8"
+        initial={{ x: '-100vw', opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 50 }}
+        style={{
+          background: `linear-gradient(to right, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+          overflow: 'hidden', // Hide any overflow
+        }}
+      >
+        <div className="flex justify-center items-center mb-4">
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto no-scrollbar"
+            style={{ paddingBottom: '16px', scrollBehavior: 'smooth' }}
+          >
+            {images.map((image, index) => (
+              <motion.div
+                key={index}
+                className="w-[180px] md:w-[200px] flex-shrink-0 relative"
+                style={{ marginRight: index !== images.length - 1 ? '8px' : 0 }}
+                whileHover={{ scale: 1.05 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="h-full relative" sx={{ width: '100%', height: '240px' }}>
+                  <CardMedia
+                    component="img"
+                    height="100%"
+                    image={image.src}
+                    alt={image.alt}
+                    sx={{ width: '100%', height: '100%' }}
+                  />
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center">
+                    <motion.button
+                      className="bg-white text-black py-1 px-4 rounded-md"
+                      style={{ whiteSpace: 'nowrap' }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {image.buttonText}
+                    </motion.button>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
-        <motion.button
-          onClick={goToNextSlide}
-          className={`p-2 ${currentImageIndex >= images.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          <KeyboardArrowRightIcon />
-        </motion.button>
-      </div>
-    </motion.div>
+      </motion.div>
+    </ThemeProvider>
   );
 };
 
