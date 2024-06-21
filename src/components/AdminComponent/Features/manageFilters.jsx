@@ -123,6 +123,7 @@ const ManageFilters = () => {
         name: newFilterName,
         postIds: []
       });
+      setFilters([...filters, { id: newFilterRef.id, name: newFilterName, postIds: [] }]);
       toast.success('New filter added successfully!');
       setNewFilterName('');
     } catch (error) {
@@ -135,6 +136,7 @@ const ManageFilters = () => {
     try {
       const filterRef = doc(db, 'filterCollections', selectedCategory.id, 'filters', filterId);
       await deleteDoc(filterRef);
+      setFilters(filters.filter(filter => filter.id !== filterId));
       toast.success('Filter deleted successfully!');
     } catch (error) {
       console.error("Error deleting filter: ", error);
@@ -144,9 +146,12 @@ const ManageFilters = () => {
 
   const handleRemovePostFromFilter = async (postId) => {
     try {
+      const updatedSelectedPosts = selectedPosts.filter(id => id !== postId);
+      setSelectedPosts(updatedSelectedPosts);
+
       const filterRef = doc(db, 'filterCollections', selectedCategory.id, 'filters', selectedFilter);
       await updateDoc(filterRef, {
-        postIds: selectedPosts.filter(id => id !== postId)
+        postIds: updatedSelectedPosts
       });
       toast.success('Post removed from filter successfully!');
     } catch (error) {
@@ -214,7 +219,7 @@ const ManageFilters = () => {
                       />
                       <label htmlFor={post.id}>{post.name}</label>
                       <button
-                        onClick={() => handleRemovePostFromFilter(post.id)}
+                        onClick={(e) => { e.stopPropagation(); handleRemovePostFromFilter(post.id); }}
                         className="ml-2 p-1 bg-red-600 text-white rounded-md hover:bg-red-800 transition-all duration-300"
                       >
                         Remove
@@ -231,7 +236,7 @@ const ManageFilters = () => {
               )}
             </div>
             <button
-              onClick={() => handleDeleteFilter(filter.id)}
+              onClick={(e) => { e.stopPropagation(); handleDeleteFilter(filter.id); }}
               className="mt-2 p-2 bg-red-600 text-white rounded-md hover:bg-red-800 transition-all duration-300"
             >
               Delete Filter

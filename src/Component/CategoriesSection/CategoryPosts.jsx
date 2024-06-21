@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -12,9 +12,6 @@ const CategoryPosts = () => {
   const { categoryName } = useParams();
   const [posts, setPosts] = useState([]);
   const [categoryNameFromDB, setCategoryNameFromDB] = useState('');
-  const [filteredPosts, setFilteredPosts] = useState([]);
-  const [selectedFilter, setSelectedFilter] = useState(null);
-  const [categoryFilters, setCategoryFilters] = useState([]);
 
   useEffect(() => {
     const fetchCategoryDetails = async () => {
@@ -24,24 +21,10 @@ const CategoryPosts = () => {
           if (doc.data().name === categoryName) {
             setCategoryNameFromDB(doc.data().name);
             fetchPosts(doc.data().id); // Fetch posts where categoryId matches category id
-            fetchCategoryFilters(doc.data().id); // Fetch category filters
           }
         });
       } catch (error) {
         console.error("Error fetching category details: ", error);
-      }
-    };
-
-    const fetchCategoryFilters = async (categoryId) => {
-      try {
-        const filtersQuerySnapshot = await getDocs(collection(db, 'filterCollections', categoryId, 'filters'));
-        const filtersData = filtersQuerySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setCategoryFilters(filtersData);
-      } catch (error) {
-        console.error("Error fetching category filters: ", error);
       }
     };
 
@@ -56,83 +39,19 @@ const CategoryPosts = () => {
         }));
 
         setPosts(postsData);
-        setFilteredPosts(postsData); // Initialize filtered posts with all posts
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
     };
 
     fetchCategoryDetails();
-  }, [categoryName, db]);
-
-  // Function to handle filter selection
-  const handleFilterClick = async (filterId) => {
-    setSelectedFilter(filterId);
-    try {
-      // Construct the reference to the filter document
-      const filterDocRef = doc(db, 'filterCollections', categoryName, 'filters', filterId);
-  
-      // Fetch the document
-      const filterDocSnap = await getDoc(filterDocRef);
-  
-      // Check if the document exists
-      if (filterDocSnap.exists()) {
-        // Extract postIds array from the document data
-        const postData = filterDocSnap.data();
-        const postIds = postData.postIds || [];
-  
-        // Log the postIds array
-        console.log("Post IDs array:", postIds);
-  
-        // Set filteredPosts to the postIds array
-        setFilteredPosts(postIds);
-      } else {
-        console.error(`Filter with ID ${filterId} does not exist.`);
-      }
-    } catch (error) {
-      console.error("Error fetching filtered posts details: ", error);
-    }
-  };
-  
-  
-  
-  
+  }, [categoryName]);
 
   return (
     <div className="category-posts-section py-8 bg-gray-100">
-    <h2 className="text-center text-3xl mb-8">Category: {categoryNameFromDB}</h2>
-
-    {/* Filter buttons */}
-    <div className="flex justify-center items-center gap-4 mb-4">
-      {categoryFilters.map(filter => (
-        <div
-          key={filter.id}
-          className={`relative p-2 border rounded-md cursor-pointer ${selectedFilter === filter.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-blue-200'}`}
-          onClick={() => handleFilterClick(filter.id)}
-        >
-          {filter.name}
-          {selectedFilter === filter.id && (
-            <div className="absolute top-10 left-0 w-full bg-white border border-gray-300 rounded-md p-4 shadow-md">
-              <h3 className="text-lg font-semibold mb-2">Filter Details</h3>
-              <p className="text-sm text-gray-700">Details for filter: {filter.name}</p>
-              
-              {/* Display postIds */}
-    <div className="mt-4">
-      <h4 className="text-sm font-semibold mb-1">Post IDs:</h4>
-      <ul className="list-disc pl-4">
-      {filteredPosts.map((postId, index) => (
-  <li key={index}>{`Index ${index}: ${postId}`}</li>
-))}
-      </ul>
-    </div>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-      {/* Display posts based on selected filter */}
+      <h2 className="text-center text-3xl mb-8">Category: {categoryNameFromDB}</h2>
       <div className="flex justify-center items-center flex-wrap gap-4">
-        {filteredPosts.map(post => (
+        {posts.map(post => (
           <motion.div
             key={post.id}
             className="w-60 flex-shrink-0"

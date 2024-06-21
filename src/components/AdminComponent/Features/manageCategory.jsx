@@ -8,10 +8,12 @@ import 'react-toastify/dist/ReactToastify.css';
 const ManageCategory = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [posts, setPosts] = useState([]);
   const [postName, setPostName] = useState('');
   const [postDescription, setPostDescription] = useState('');
-  const [postPrice, setPostPrice] = useState('');
+  const [postActualPrice, setPostActualPrice] = useState('');
+  const [postSellingPrice, setPostSellingPrice] = useState('');
   const [postImage, setPostImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -56,10 +58,18 @@ const ManageCategory = () => {
     setSelectedCategory(category);
   };
 
+  const handleCheckboxChange = (categoryId) => {
+    if (selectedCategories.includes(categoryId)) {
+      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+    } else {
+      setSelectedCategories([...selectedCategories, categoryId]);
+    }
+  };
+
   const handleAddPost = async (e) => {
     e.preventDefault();
-    if (!postName || !postDescription || !postPrice || !postImage) {
-      toast.error('Please fill all the fields.');
+    if (!postName || !postDescription || !postActualPrice || !postSellingPrice || !postImage || selectedCategories.length === 0) {
+      toast.error('Please fill all the fields and select at least one category.');
       return;
     }
 
@@ -79,27 +89,31 @@ const ManageCategory = () => {
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           try {
-            const postRef = doc(db, 'posts', `${selectedCategory.id}`); // Unique ID using category ID and timestamp
-            await setDoc(postRef, {
+            const newPostRef = doc(collection(db, 'posts')); // Create a new document reference
+            await setDoc(newPostRef, {
               name: postName,
               description: postDescription,
-              price: postPrice,
+              actualPrice: postActualPrice,
+              sellingPrice: postSellingPrice,
               imageUrl: downloadURL,
-              categoryId: selectedCategory.id
+              categoryIds: selectedCategories // Store multiple category IDs
             });
             setPostName('');
             setPostDescription('');
-            setPostPrice('');
+            setPostActualPrice('');
+            setPostSellingPrice('');
             setPostImage(null);
+            setSelectedCategories([]);
             setUploading(false);
             toast.success('Post added successfully!');
             setPosts([...posts, {
-              id: postRef.id,
+              id: newPostRef.id,
               name: postName,
               description: postDescription,
-              price: postPrice,
+              actualPrice: postActualPrice,
+              sellingPrice: postSellingPrice,
               imageUrl: downloadURL,
-              categoryId: selectedCategory.id
+              categoryIds: selectedCategories
             }]);
           } catch (error) {
             console.error('Error adding post: ', error);
@@ -143,40 +157,64 @@ const ManageCategory = () => {
       {selectedCategory && (
         <div className="p-8 border rounded-md shadow-md bg-gray-100">
           <h2 className="text-2xl font-bold mb-4">Add Post to {selectedCategory.name}</h2>
-          <form onSubmit={handleAddPost} className="grid grid-cols-1 gap-4">
-            <input 
-              type="text" 
-              placeholder="Post Name" 
-              value={postName} 
-              onChange={(e) => setPostName(e.target.value)}
-              className="p-2 border rounded-md"
-            />
-            <textarea 
-              placeholder="Post Description" 
-              value={postDescription} 
-              onChange={(e) => setPostDescription(e.target.value)}
-              className="p-2 border rounded-md"
-            />
-            <input 
-              type="number" 
-              placeholder="Post Price" 
-              value={postPrice} 
-              onChange={(e) => setPostPrice(e.target.value)}
-              className="p-2 border rounded-md"
-            />
-            <input 
-              type="file" 
-              onChange={(e) => setPostImage(e.target.files[0])}
-              className="p-2 border rounded-md"
-            />
-            <button 
-              type="submit" 
-              className={`p-2 bg-blue-600 text-white rounded-md ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800 transition-all duration-300'}`}
-              disabled={uploading}
-            >
-              {uploading ? 'Uploading...' : 'Add Post'}
-            </button>
-          </form>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleAddPost} className="grid grid-cols-1 gap-4">
+              <input 
+                type="text" 
+                placeholder="Post Name" 
+                value={postName} 
+                onChange={(e) => setPostName(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+              <textarea 
+                placeholder="Post Description" 
+                value={postDescription} 
+                onChange={(e) => setPostDescription(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+              <input 
+                type="number" 
+                placeholder="Actual Price" 
+                value={postActualPrice} 
+                onChange={(e) => setPostActualPrice(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+              <input 
+                type="number" 
+                placeholder="Selling Price" 
+                value={postSellingPrice} 
+                onChange={(e) => setPostSellingPrice(e.target.value)}
+                className="p-2 border rounded-md"
+              />
+              <input 
+                type="file" 
+                onChange={(e) => setPostImage(e.target.files[0])}
+                className="p-2 border rounded-md"
+              />
+              <button 
+                type="submit" 
+                className={`p-2 bg-blue-600 text-white rounded-md ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800 transition-all duration-300'}`}
+                disabled={uploading}
+              >
+                {uploading ? 'Uploading...' : 'Add Post'}
+              </button>
+            </form>
+            <div className="p-4 border rounded-md shadow-md bg-white">
+              <h2 className="text-xl font-bold mb-2">Select Categories</h2>
+              {categories.map(category => (
+                <div key={category.id} className="flex items-center mb-2">
+                  <input 
+                    type="checkbox" 
+                    id={category.id} 
+                    checked={selectedCategories.includes(category.id)}
+                    onChange={() => handleCheckboxChange(category.id)}
+                    className="mr-2"
+                  />
+                  <label htmlFor={category.id} className="text-gray-800">{category.name}</label>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
       {selectedCategory && (
@@ -188,7 +226,8 @@ const ManageCategory = () => {
                 <img src={post.imageUrl} alt={post.name} className="w-full h-48 object-cover rounded-md" />
                 <h3 className="text-xl font-semibold mt-2">{post.name}</h3>
                 <p className="mt-1 text-gray-600">{post.description}</p>
-                <p className="mt-1 text-gray-800 font-bold">${post.price}</p>
+                <p className="mt-1 text-gray-800 font-bold line-through">${post.actualPrice}</p>
+                <p className="mt-1 text-gray-800 font-bold">${post.sellingPrice}</p>
                 <button 
                   onClick={() => handleDeletePost(post.id, post.imageUrl)} 
                   className="mt-4 p-2 bg-red-600 text-white rounded-md hover:bg-red-800 transition-all duration-300"
