@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Header from './Component/Header/header';
 import Footer from './Component/footer/footer';
 import Home from './Pages/home';  // Make sure to import the Home component
-import LoginComponent from './Pages/LoginPage/loginPage'; // Adjust path as per your project structure
+ import LoginPage from './Pages/LoginPage/loginPage' // Adjust path as per your project structure
 import AdminPage from './Pages/AdminPage/adminPage'; // Adjust path as per your project structure
 
 const App = () => {
@@ -65,7 +65,7 @@ const App = () => {
         <div className="pt-24">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<PublicRoute element={<LoginComponent onLogin={handleLogin} />} restricted />} />
+            <Route path="/login" element={<PublicRoute element={<LoginPage onLogin={handleLogin} />} restricted />} />
             <Route path="/admin" element={<PrivateRoute element={<AdminPage />} allowedRoles={['admin']} />} />
             {/* Add more routes here as needed */}
           </Routes>

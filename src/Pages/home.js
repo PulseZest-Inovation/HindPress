@@ -10,12 +10,13 @@ export default function Home() {
   return (
     <div> 
       <HeroSection/>
-      <CounterBar />
+      
       <New />
       <Popular/>
       <Print />
       <Sign />
       <State />
+      <CounterBar />
     </div>
   )
 }
