@@ -10,7 +10,7 @@ import { styled } from '@mui/system';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ManageCategoryComponent = () => {
+const AddCategoryComponent = () => {
   const [categoryName, setCategoryName] = useState('');
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
@@ -191,4 +191,4 @@ const ManageCategoryComponent = () => {
   );
 };
 
-export default ManageCategoryComponent;
+export default AddCategoryComponent;
