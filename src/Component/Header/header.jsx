@@ -15,9 +15,10 @@ const Header = () => {
           placeholder="Search"
           className="w-full px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-purple-600"
         />
-        <button className="px-8 py-2 bg-purple-600 text-white rounded-r-full hover:bg-purple-700 focus:outline-none">
-          <FaSearch />
-        </button>
+       <button className="ml-4 px-8 py-3 bg-purple-600 text-white rounded-r-full hover:bg-purple-700 focus:outline-none">
+  <FaSearch />
+</button>
+
       </div>
       <div className="flex items-center space-x-6">
         <div className="flex items-center text-gray-700 hover:text-purple-600 cursor-pointer">
