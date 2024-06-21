@@ -13,7 +13,7 @@ export default function Home() {
     <div> 
        <Header />
       <HeroSection/>
-      <CounterBar />
+      
       <New />
       <Popular/>
       <Print />
