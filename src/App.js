@@ -5,7 +5,7 @@ import Home from './Pages/home';
 import LoginComponent from './Pages/LoginPage/loginPage';
 import AdminPage from './Pages/AdminPage/adminPage';
 import CategoryPosts from './Component/CategoriesSection/CategoryPosts'; // Adjust path as per your project structure
-
+import PostDetails from './Component/CategoriesSection/PostDetails';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -26,9 +26,9 @@ const App = () => {
     localStorage.removeItem('isLoggedIn');
   };
 
-  const PrivateRoute = ({ element, allowedRoles }) => {
+  const PrivateRoute = ({ element }) => {
     if (checkingAuth) {
-      return null;
+      return <div>Loading...</div>;
     }
 
     if (!isLoggedIn) {
@@ -40,7 +40,7 @@ const App = () => {
 
   const PublicRoute = ({ element, restricted }) => {
     if (checkingAuth) {
-      return null;
+      return <div>Loading...</div>;
     }
 
     if (isLoggedIn && restricted) {
@@ -58,7 +58,9 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<PublicRoute element={<LoginComponent onLogin={handleLogin} />} restricted />} />
             <Route path="/admin" element={<PrivateRoute element={<AdminPage />} />} />
-            <Route path="/category/:categoryName" element={<CategoryPosts />} /> {/* Updated route with categoryName param */}
+            <Route path="/category/:categoryName" element={<CategoryPosts />} />
+            <Route path="/posts/:postId" element={<PostDetails />} />
+          
           </Routes>
         </div>
       </Router>
