@@ -85,19 +85,13 @@ const SectionsAndPosts = () => {
 
   const scrollLeft = () => {
     if (scrollContainer.current) {
-      scrollContainer.current.scrollBy({
-        left: -300,
-        behavior: 'smooth'
-      });
+      scrollContainer.current.scrollLeft -= 300;
     }
   };
 
   const scrollRight = () => {
     if (scrollContainer.current) {
-      scrollContainer.current.scrollBy({
-        left: 300,
-        behavior: 'smooth'
-      });
+      scrollContainer.current.scrollLeft += 300;
     }
   };
 
@@ -116,7 +110,7 @@ const SectionsAndPosts = () => {
               >
                 &lt;
               </button>
-              <div ref={scrollContainer} className="flex overflow-x-hidden p-6 space-x-4">
+              <div ref={scrollContainer} className="flex p-6 space-x-4 overflow-x-auto">
                 {section.posts.map(post => (
                   <motion.div
                     key={post.id}
