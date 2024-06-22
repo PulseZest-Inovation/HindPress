@@ -84,12 +84,13 @@ const CategoryPosts = () => {
                 />
                 <CardContent className="p-4">
                   <h3 className="text-xl font-semibold mb-2 text-gray-900">{post.name}</h3>
-                  <div className="flex justify-between items-center text-gray-700 mb-4">
+                  <div className="flex justify-start items-center text-gray-700 mb-4 space-x-2">
                     <p className="text-lg font-bold text-green-600">${post.sellingPrice}</p>
                     <p className="text-base line-through">${post.actualPrice}</p>
                   </div>
                   <p className="text-sm text-gray-600">{post.description}</p>
                 </CardContent>
+
               </motion.div>
             ))}
           </div>

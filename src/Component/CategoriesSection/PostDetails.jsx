@@ -43,7 +43,7 @@ const PostDetails = () => {
             </div>
             <div className="md:w-1/2 md:pl-6">
               <h2 className="text-4xl font-bold mb-4 text-gray-800">{post.name}</h2>
-              <div className="flex justify-between items-center text-gray-700 mb-4">
+              <div className="flex justify-start items-center text-gray-700 mb-4 space-x-2">
                 <p className="text-3xl font-bold text-green-600">${post.sellingPrice}</p>
                 <p className="text-xl line-through">${post.actualPrice}</p>
               </div>

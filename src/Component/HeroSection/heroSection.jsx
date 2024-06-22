@@ -5,7 +5,6 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import CategoriesSection from '../CategoriesSection/categoriesSection'; // Adjust the path as necessary
 import DesignGalleryImage1 from '../../assets/images/1.jpg';
 import DesignGalleryImage2 from '../../assets/images/2.jpeg';
 import DesignGalleryImage3 from '../../assets/images/3.jpg';
@@ -98,7 +97,6 @@ const HeroSection = () => {
           </motion.button>
         </div>
       </motion.div>
-      <CategoriesSection />
     </>
   );
 };
