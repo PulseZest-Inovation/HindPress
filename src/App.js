@@ -5,7 +5,8 @@ import Home from './Pages/home';
 import LoginComponent from './Pages/LoginPage/loginPage';
 import AdminPage from './Pages/AdminPage/adminPage';
 import CategoryPosts from './Component/CategoriesSection/CategoryPosts'; // Adjust path as per your project structure
-import PostDetails from './Component/CategoriesSection/PostDetails';
+import PostDetails from './Component/CategoriesSection/PostDetails'; // Import PostDetails component
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -59,8 +60,7 @@ const App = () => {
             <Route path="/login" element={<PublicRoute element={<LoginComponent onLogin={handleLogin} />} restricted />} />
             <Route path="/admin" element={<PrivateRoute element={<AdminPage />} />} />
             <Route path="/category/:categoryName" element={<CategoryPosts />} />
-            <Route path="/posts/:postId" element={<PostDetails />} />
-          
+            <Route path="/posts/:postId" element={<PostDetails />} /> {/* Route for post details */}
           </Routes>
         </div>
       </Router>

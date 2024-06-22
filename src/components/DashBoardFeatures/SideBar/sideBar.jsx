@@ -1,7 +1,7 @@
 // Sidebar.js
 import React, { useState } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { Home, Category, Info, Menu, ExitToApp,AddAPhoto,ManageHistory} from '@mui/icons-material';
+import { Home, Category, Info, Menu, ExitToApp,AddAPhoto,ManageHistory,AddAlert} from '@mui/icons-material';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../utils/FireBase/firebaseConfig'; // Adjust the path as per your project structure
 
@@ -62,6 +62,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
           <List>
             {[
               { text: 'Home', icon: <Home />, section: 'home' },
+              { text: 'Add Headline', icon: <AddAlert />, section: 'add-headline' },
               { text: 'Add Category', icon: <AddAPhoto />, section: 'add-category' },
               { text: 'Manage Posts', icon: <Category />, section: 'manage-category' },
               { text: 'All Posts', icon: <ManageHistory />, section: 'all-category' },

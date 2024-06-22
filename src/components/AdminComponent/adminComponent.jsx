@@ -5,6 +5,8 @@ import Home from './Features/home';
 import AddCategoryComponent from './Features/addCategory';
 import ManageCategory from './Features/manageCategory';
 import AllPosts from './Features/allPosts';
+import AddHeadLine from './Features/addHeadLine';
+
 
 const AdminComponent = () => {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -18,6 +20,7 @@ const AdminComponent = () => {
       <Sidebar onItemClick={handleSidebarItemClick} />
       <div style={styles.content}>
         {selectedSection === 'home' && <Home />}
+        {selectedSection === 'add-headline' && <AddHeadLine />}
         {selectedSection === 'add-category' && <AddCategoryComponent />}
         {selectedSection === 'manage-category' && <ManageCategory />}
         {selectedSection === 'all-category' && <AllPosts />}
