@@ -1,9 +1,10 @@
 // AdminComponent.js
 import React, { useState } from 'react';
 import Sidebar from "../DashBoardFeatures/SideBar/sideBar";
-import AddCategory from './Features/addCategory'; // Adjust path as per your project structure
 import Home from './Features/home';
 import AddCategoryComponent from './Features/addCategory';
+import ManageCategory from './Features/manageCategory';
+import AllPosts from './Features/allPosts';
 
 const AdminComponent = () => {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -18,6 +19,8 @@ const AdminComponent = () => {
       <div style={styles.content}>
         {selectedSection === 'home' && <Home />}
         {selectedSection === 'add-category' && <AddCategoryComponent />}
+        {selectedSection === 'manage-category' && <ManageCategory />}
+        {selectedSection === 'all-category' && <AllPosts />}
       </div>
     </div>
   );

@@ -1,4 +1,6 @@
 import React from 'react'
+import Header from '../Component/Header/header';
+import Footer from '../Component/footer/footer';
 import CounterBar from '../Component/Counter/counter'
 import HeroSection from '../Component/HeroSection/heroSection'
 import New from '../Component/NewLaunches/new'
@@ -10,15 +12,16 @@ import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead'
 export default function Home() {
   return (
     <div> 
-      <ResponsiveAppBar/>
+    <Header/>
+    <ResponsiveAppBar/>
       <HeroSection/>
-      
       <New />
       <Popular/>
       <Print />
       <Sign />
       <State />
-      <CounterBar />
+      <CounterBar/>
+      <Footer />
     </div>
   )
 }

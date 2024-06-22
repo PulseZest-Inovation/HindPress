@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../utils/FireBase/firebaseConfig';  // Ensure this path is correct
-import { collection, getDocs } from 'firebase/firestore'; // Import Firestore methods
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import { useNavigate } from 'react-router-dom';
+import { db } from '../../utils/FireBase/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 import CardMedia from '@mui/material/CardMedia';
 import Paper from '@mui/material/Paper';
 import { motion } from 'framer-motion';
 
 const CategoriesSection = () => {
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -27,6 +27,10 @@ const CategoriesSection = () => {
     fetchCategories();
   }, []);
 
+  const handleCategoryClick = (categoryName) => {
+    navigate(`/category/${categoryName}`);
+  };
+
   return (
     <div className="categories-section py-8 bg-gray-100">
       <h2 className="text-center text-3xl mb-8">Categories</h2>
@@ -39,19 +43,20 @@ const CategoriesSection = () => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
+            onClick={() => handleCategoryClick(category.name)}
           >
-            <Paper elevation={3} className="p-4 h-full flex flex-col justify-between">
+            <Paper elevation={3} className="p-4 h-full flex flex-col justify-between cursor-pointer">
               <CardMedia
                 component="img"
-                height="140"
-                image={category.fileUrl} // Assumes 'fileUrl' field contains the image URL
+                height="120"
+                image={category.fileUrl}
                 alt={category.name}
                 className="object-cover"
               />
-              <CardContent className="p-0 pt-4">
+              <div className="p-0 pt-4">
                 <h3 className="text-xl mb-2">{category.name}</h3>
                 <p className="text-sm text-gray-500">ID: {category.id}</p>
-              </CardContent>
+              </div>
             </Paper>
           </motion.div>
         ))}
