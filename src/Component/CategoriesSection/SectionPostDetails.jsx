@@ -111,19 +111,12 @@ const SectionsAndPosts = () => {
                     />
                     <div className="pt-4">
                       <h3 className="text-xl mb-2 font-semibold">{post.title}</h3>
-                      <p className="text-sm text-red-400">Name: {post.name}</p>
+                      <p className="text-sm font-bold text-black-800 text-shadow">Name: {post.name}</p>
+
                     </div>
                     <div className="flex justify-between mt-4 relative group">
                       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                        <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md mr-2"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleMovePost(post.id, section.id, 'otherSectionId');
-                          }}
-                        >
-                          Move to Other Section
-                        </button>
+                      
                       </div>
                     </div>
                   </Paper>
