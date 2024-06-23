@@ -89,7 +89,7 @@ const Grid = () => {
               whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
+              transition={{ delay: index * 0.1, duration: 0.20 }}
             >
               <Card
                 className={`h-full ${index === images.length - 1 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : ''}`}

@@ -28,7 +28,8 @@ const Sign = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef(null);
   const cardWidth = 320; // Define card width + margin
-
+  
+  // Effect to handle smooth scrolling to the current image
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
@@ -38,12 +39,14 @@ const Sign = () => {
     }
   }, [currentImageIndex]);
 
+  // Function to go to the next slide
   const goToNextSlide = () => {
     if (currentImageIndex < images.length - 1) {
       setCurrentImageIndex(currentImageIndex + 1);
     }
   };
 
+  // Function to go to the previous slide
   const goToPrevSlide = () => {
     if (currentImageIndex > 0) {
       setCurrentImageIndex(currentImageIndex - 1);
@@ -68,44 +71,45 @@ const Sign = () => {
         <motion.button
           onClick={goToPrevSlide}
           className={`p-2 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: currentImageIndex === 0 ? 1 : 1.1 }}
+          whileTap={{ scale: currentImageIndex === 0 ? 1 : 0.9 }}
+          disabled={currentImageIndex === 0}
         >
           <KeyboardArrowLeftIcon />
         </motion.button>
         <div
-  ref={scrollRef}
-  className="overflow-x-hidden overflow-y-hidden flex space-x-2 w-full smooth-scroll"
->
-  {images.map((image, index) => (
-    <motion.div
-      key={index}
-      className="w-64 flex-shrink-0" // Adjusted width to w-64
-      whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: index * 0.2, duration: 0.5 }}
-    >
-      <Card className="h-full">
-        <CardMedia
-          component="img"
-          height="140"
-          image={image.src}
-          alt={`Image Slide ${index + 1}`}
-        />
-        <CardContent className="text-black">
-          <h3 className="text-black">{image.title}</h3>
-        </CardContent>
-      </Card>
-    </motion.div>
-  ))}
-</div>
-
+          ref={scrollRef}
+          className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full"
+        >
+          {images.map((image, index) => (
+            <motion.div
+              key={index}
+              className="w-80 flex-shrink-0"
+              whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.1, duration: 0.2 }}
+            >
+              <Card className="h-full">
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={image.src}
+                  alt={`Image Slide ${index + 1}`}
+                />
+                <CardContent className="text-black">
+                  <h3 className="text-black text-lg">{image.title}</h3>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
         <motion.button
           onClick={goToNextSlide}
           className={`p-2 ${currentImageIndex >= images.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: currentImageIndex >= images.length - 1 ? 1 : 1.1 }}
+          whileTap={{ scale: currentImageIndex >= images.length - 1 ? 1 : 0.9 }}
+          disabled={currentImageIndex >= images.length - 1}
         >
           <KeyboardArrowRightIcon />
         </motion.button>
