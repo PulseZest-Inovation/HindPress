@@ -9,6 +9,7 @@ import HeroSection from '../Component/HeroSection/heroSection';
 import SectionsAndPosts from '../Component/CategoriesSection/SectionPostDetails';
 import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
+import WhatsAppButton from '../Component/Whatsapp/Chat';
 
 const Home = () => {
 
@@ -21,6 +22,8 @@ const Home = () => {
       <SectionsAndPosts/>
       <CounterBar/>
       <Footer />
+
+      <WhatsAppButton phoneNumber="9598919119" />
     </div>
   );
 };

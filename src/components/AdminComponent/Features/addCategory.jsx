@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/system';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,9 +15,13 @@ const AddCategoryComponent = () => {
   const [categoryName, setCategoryName] = useState('');
   const [file, setFile] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state for fetching categories
+  const [adding, setAdding] = useState(false); // Loading state for adding category
+  const [deleting, setDeleting] = useState(''); // Loading state for deleting category (category ID being deleted)
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true);
       try {
         const querySnapshot = await getDocs(collection(db, 'categories'));
         const categoriesData = querySnapshot.docs.map(doc => ({
@@ -27,6 +32,8 @@ const AddCategoryComponent = () => {
       } catch (error) {
         console.error('Error fetching categories:', error.message);
         toast.error('Failed to fetch categories. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -34,9 +41,11 @@ const AddCategoryComponent = () => {
   }, []);
 
   const handleAddCategory = async () => {
+    setAdding(true);
     try {
       if (!categoryName || !file) {
         toast.error('Please enter category name and choose a file');
+        setAdding(false);
         return;
       }
 
@@ -70,10 +79,13 @@ const AddCategoryComponent = () => {
       console.error('Error adding category:', error.message);
       // Error toast
       toast.error('Failed to add category. Please try again later.');
+    } finally {
+      setAdding(false);
     }
   };
 
   const handleDeleteCategory = async (categoryId) => {
+    setDeleting(categoryId);
     try {
       // Find the document ID in Firestore based on the categoryId
       const querySnapshot = await getDocs(query(collection(db, 'categories'), where('id', '==', categoryId)));
@@ -100,6 +112,8 @@ const AddCategoryComponent = () => {
       console.error('Error deleting category:', error.message);
       // Error toast
       toast.error('Failed to delete category. Please try again later.');
+    } finally {
+      setDeleting('');
     }
   };
 
@@ -153,38 +167,42 @@ const AddCategoryComponent = () => {
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
         />
-        <Button variant="contained" color="primary" onClick={handleAddCategory} style={{ marginTop: '10px', width: '100%' }}>
-          Add Category
+        <Button variant="contained" color="primary" onClick={handleAddCategory} style={{ marginTop: '10px', width: '100%' }} disabled={adding}>
+          {adding ? <CircularProgress size={24} /> : 'Add Category'}
         </Button>
       </div>
       <div style={categorySectionStyle}>
         <h2>Saved Categories</h2>
-        {categories.map(category => (
-          <StyledPaper key={category.id}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-              <div style={{ flex: 1 }}>
-                <Typography variant="h6" component="div">
-                  Category Name: {category.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Unique ID: {category.id}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Created At: {new Date(category.createdAt).toLocaleString()}
-                </Typography>
-                <Typography variant="body2">
-                  View File:{' '}
-                  <a href={category.fileUrl} target="_blank" rel="noopener noreferrer">
-                    <StyledImage src={category.fileUrl} alt={category.name} />
-                  </a>
-                </Typography>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          categories.map(category => (
+            <StyledPaper key={category.id}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <Typography variant="h6" component="div">
+                    Category Name: {category.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Unique ID: {category.id}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    Created At: {new Date(category.createdAt).toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2">
+                    View File:{' '}
+                    <a href={category.fileUrl} target="_blank" rel="noopener noreferrer">
+                      <StyledImage src={category.fileUrl} alt={category.name} />
+                    </a>
+                  </Typography>
+                </div>
+                <Button variant="contained" color="secondary" onClick={() => handleDeleteCategory(category.id)} disabled={deleting === category.id}>
+                  {deleting === category.id ? <CircularProgress size={24} /> : 'Delete'}
+                </Button>
               </div>
-              <Button variant="contained" color="secondary" onClick={() => handleDeleteCategory(category.id, category.fileUrl)}>
-                Delete
-              </Button>
-            </div>
-          </StyledPaper>
-        ))}
+            </StyledPaper>
+          ))
+        )}
       </div>
       <ToastContainer />
     </div>

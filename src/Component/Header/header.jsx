@@ -14,18 +14,26 @@ const Header = ({ onSearchResults }) => {
     if (searchQuery.trim() === '') return;
 
     try {
-      const q = query(collection(db, 'posts'), where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'));
-      const querySnapshot = await getDocs(q);
+      const searchResults = [];
 
-      const searchResults = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      // Search in posts
+      const postQuery = query(collection(db, 'posts'), where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'));
+      const postQuerySnapshot = await getDocs(postQuery);
+      const postResults = postQuerySnapshot.docs.map(doc => ({ id: doc.id, type: 'post', ...doc.data() }));
+      searchResults.push(...postResults);
+
+      // Search in categories
+      const categoryQuery = query(collection(db, 'categories'), where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'));
+      const categoryQuerySnapshot = await getDocs(categoryQuery);
+      const categoryResults = categoryQuerySnapshot.docs.map(doc => ({ id: doc.id, type: 'category', ...doc.data() }));
+      searchResults.push(...categoryResults);
+
+      // Add more queries for other collections if needed
 
       onSearchResults(searchResults);
       navigate('/search'); // Assuming you have a search results route
     } catch (error) {
-      console.error("Error searching posts: ", error);
+      console.error("Error searching: ", error);
     }
   };
 

@@ -8,7 +8,6 @@ import LoginComponent  from './Pages/LoginPage/loginPage';
 import AdminPage from './Pages/AdminPage/adminPage';
 import PostDetails from './Component/CategoriesSection/PostDetails'; // Import PostDetails component
 import CategoryPosts from './Component/CategoriesSection/CategoryPosts';
-import WhatsAppButton from './Component/Whatsapp/Chat';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -73,7 +72,7 @@ const App = () => {
             <Route path="/category/:categoryName" element={<CategoryPosts />} />
             <Route path="/posts/:postId" element={<PostDetails />} /> {/* Route for post details */}
           </Routes>
-          <WhatsAppButton phoneNumber="9598919119" />
+        
         </div>
       
       </Router>

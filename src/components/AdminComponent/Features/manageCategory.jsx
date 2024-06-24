@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { db, storage } from '../../../utils/FireBase/firebaseConfig';
-import { collection, addDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { ToastContainer, toast } from 'react-toastify';
+import CircularProgress from '@mui/material/CircularProgress';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ManageCategory = () => {
@@ -13,10 +14,12 @@ const ManageCategory = () => {
   const [postActualPrice, setPostActualPrice] = useState('');
   const [postSellingPrice, setPostSellingPrice] = useState('');
   const [postImage, setPostImage] = useState(null);
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoadingCategories(true);
       try {
         const querySnapshot = await getDocs(collection(db, 'categories'));
         const categoriesData = querySnapshot.docs.map(doc => ({
@@ -26,6 +29,9 @@ const ManageCategory = () => {
         setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories: ", error);
+        toast.error('Failed to fetch categories. Please try again later.');
+      } finally {
+        setLoadingCategories(false);
       }
     };
 
@@ -85,93 +91,96 @@ const ManageCategory = () => {
       setPostSellingPrice('');
       setPostImage(null);
       setSelectedCategories([]);
-      setUploading(false);
   
       // Display success message
       toast.success('Post added successfully!');
     } catch (error) {
       console.error('Error adding post: ', error);
       toast.error('Error adding post. Please try again.');
+    } finally {
       setUploading(false);
     }
   };
-  
-  
 
   return (
     <div className="container mx-auto px-4 py-8">
-  <ToastContainer />
-  <h1 className="text-3xl font-bold mb-4 text-center">Manage Posts</h1>
-  
-  <div className="flex">
-    {/* Form for adding a new post */}
-    <div className="w-1/2 p-4 border rounded-md shadow-md bg-gray-100 mr-4">
-      <h2 className="text-2xl font-bold mb-4">Add New Post</h2>
-      <form onSubmit={handleAddPost} className="grid grid-cols-1 gap-4">
-        <input 
-          type="text" 
-          placeholder="Post Name" 
-          value={postName} 
-          onChange={(e) => setPostName(e.target.value)}
-          className="p-2 border rounded-md"
-        />
-        <textarea 
-          placeholder="Post Description" 
-          value={postDescription} 
-          onChange={(e) => setPostDescription(e.target.value)}
-          className="p-2 border rounded-md"
-        />
-        <input 
-          type="number" 
-          placeholder="Actual Price" 
-          value={postActualPrice} 
-          onChange={(e) => setPostActualPrice(e.target.value)}
-          className="p-2 border rounded-md"
-        />
-        <input 
-          type="number" 
-          placeholder="Selling Price" 
-          value={postSellingPrice} 
-          onChange={(e) => setPostSellingPrice(e.target.value)}
-          className="p-2 border rounded-md"
-        />
-        <input 
-          type="file" 
-          onChange={(e) => setPostImage(e.target.files[0])}
-          className="p-2 border rounded-md"
-        />
-       
-        <button 
-          type="submit" 
-          className={`p-2 bg-blue-600 text-white rounded-md ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800 transition-all duration-300'}`}
-          disabled={uploading}
-        >
-          {uploading ? 'Uploading...' : 'Add Post'}
-        </button>
-      </form>
-    </div>
+      <ToastContainer />
+      <h1 className="text-3xl font-bold mb-4 text-center">Manage Posts</h1>
 
-    {/* Category selector */}
-    <div className="w-1/2 p-4 border rounded-md shadow-md bg-gray-100">
-      <h2 className="text-2xl font-bold mb-4">Select Categories</h2>
-      <div className="p-4 border rounded-md shadow-md bg-white">
-        <h2 className="text-xl font-bold mb-2">Select Categories</h2>
-        {categories.map(category => (
-          <div key={category.id} className="flex items-center mb-2">
+      <div className="flex">
+        {/* Form for adding a new post */}
+        <div className="w-1/2 p-4 border rounded-md shadow-md bg-gray-100 mr-4">
+          <h2 className="text-2xl font-bold mb-4">Add New Post</h2>
+          <form onSubmit={handleAddPost} className="grid grid-cols-1 gap-4">
             <input 
-              type="checkbox" 
-              id={category.id} 
-              checked={selectedCategories.includes(category.id)}
-              onChange={() => handleCheckboxChange(category.id)}
-              className="mr-2"
+              type="text" 
+              placeholder="Post Name" 
+              value={postName} 
+              onChange={(e) => setPostName(e.target.value)}
+              className="p-2 border rounded-md"
             />
-            <label htmlFor={category.id} className="text-gray-800">{category.name}</label>
+            <textarea 
+              placeholder="Post Description" 
+              value={postDescription} 
+              onChange={(e) => setPostDescription(e.target.value)}
+              className="p-2 border rounded-md"
+            />
+            <input 
+              type="number" 
+              placeholder="Actual Price" 
+              value={postActualPrice} 
+              onChange={(e) => setPostActualPrice(e.target.value)}
+              className="p-2 border rounded-md"
+            />
+            <input 
+              type="number" 
+              placeholder="Selling Price" 
+              value={postSellingPrice} 
+              onChange={(e) => setPostSellingPrice(e.target.value)}
+              className="p-2 border rounded-md"
+            />
+            <input 
+              type="file" 
+              onChange={(e) => setPostImage(e.target.files[0])}
+              className="p-2 border rounded-md"
+            />
+            <button 
+              type="submit" 
+              className={`p-2 bg-blue-600 text-white rounded-md ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-800 transition-all duration-300'}`}
+              disabled={uploading}
+            >
+              {uploading ? 'Uploading...' : 'Add Post'}
+            </button>
+          </form>
+        </div>
+
+        {/* Category selector */}
+        <div className="w-1/2 p-4 border rounded-md shadow-md bg-gray-100">
+          <h2 className="text-2xl font-bold mb-4">Select Categories</h2>
+          <div className="p-4 border rounded-md shadow-md bg-white">
+            {loadingCategories ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <h2 className="text-xl font-bold mb-2">Select Categories</h2>
+                {categories.map(category => (
+                  <div key={category.id} className="flex items-center mb-2">
+                    <input 
+                      type="checkbox" 
+                      id={category.id} 
+                      checked={selectedCategories.includes(category.id)}
+                      onChange={() => handleCheckboxChange(category.id)}
+                      className="mr-2"
+                    />
+                    <label htmlFor={category.id} className="text-gray-800">{category.name}</label>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
-        ))}
+        </div>
       </div>
     </div>
-  </div>
-</div>  
   );
 };
 
