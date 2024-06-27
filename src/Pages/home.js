@@ -9,10 +9,12 @@ import Popular from '../Component/PopularProduct/popular'
 import Grid from '../Component/Product/grid'
 import Sign from '../Component/SignsMarketing/sign'
 import State from '../Component/Stationery/state'
+import Header from '../Component/Header/header';
 
 export default function Home() {
   return (
     <div> 
+     <Header />
       <HeroSection/>
       <CounterBar />
       <New />
