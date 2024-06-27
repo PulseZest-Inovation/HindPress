@@ -77,7 +77,7 @@ const CategoryPosts = () => {
               >
                 <CardMedia
                   component="img"
-                  height="240"
+                  style={{ height: '200px', objectFit: 'cover' }}
                   image={post.imageUrl}
                   alt={post.name}
                   className="w-full object-cover"

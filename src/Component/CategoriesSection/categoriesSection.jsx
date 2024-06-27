@@ -48,7 +48,7 @@ const CategoriesSection = () => {
             <Paper elevation={3} className="p-4 h-full flex flex-col justify-between cursor-pointer">
               <CardMedia
                 component="img"
-                height="120"
+                style={{ height: '200px', objectFit: 'cover' }}
                 image={category.fileUrl}
                 alt={category.name}
                 className="object-cover"

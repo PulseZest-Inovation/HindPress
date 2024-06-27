@@ -1,157 +1,160 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import Paper from '@mui/material/Paper';
 import CardMedia from '@mui/material/CardMedia';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress
+import { motion } from 'framer-motion';
 
-const SectionsAndPosts = () => {
+const SectionPostDetails = () => {
   const [sections, setSections] = useState([]);
+  const [loading, setLoading] = useState(true); // State for loading indicator
   const navigate = useNavigate();
-  const scrollContainer = useRef(null);
-
-  const fetchSectionsAndPosts = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'sections'));
-      const sectionsData = [];
-
-      for (const docRef of querySnapshot.docs) {
-        const sectionData = {
-          id: docRef.id,
-          ...docRef.data(),
-          posts: []
-        };
-
-        const postIds = sectionData.postIds.split(',');
-
-        for (const postId of postIds) {
-          const postRef = doc(db, 'posts', postId);
-          const postSnapshot = await getDoc(postRef);
-          if (postSnapshot.exists()) {
-            sectionData.posts.push({
-              id: postId,
-              ...postSnapshot.data()
-            });
-          } else {
-            console.error(`Post with ID ${postId} not found.`);
-          }
-        }
-
-        sectionsData.push(sectionData);
-      }
-
-      setSections(sectionsData);
-    } catch (error) {
-      console.error('Error fetching sections and posts:', error);
-    }
-  };
+  const scrollRef = useRef(null);
+  const cardWidth = 320;
 
   useEffect(() => {
+    const fetchSectionsAndPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'sections'));
+        const sectionsData = [];
+
+        for (const docSnap of querySnapshot.docs) {
+          const sectionData = {
+            id: docSnap.id,
+            ...docSnap.data(),
+            posts: []
+          };
+
+          const postIds = sectionData.postIds.split(',');
+
+          for (const postId of postIds) {
+            const postSnapshot = await getDoc(doc(db, 'posts', postId));
+            if (postSnapshot.exists()) {
+              sectionData.posts.push({
+                id: postId,
+                ...postSnapshot.data()
+              });
+            } else {
+              console.error(`Post with ID ${postId} not found.`);
+            }
+          }
+
+          sectionsData.push(sectionData);
+        }
+
+        setSections(sectionsData);
+        setLoading(false); // Set loading to false once data is fetched
+      } catch (error) {
+        console.error('Error fetching sections and posts:', error);
+      }
+    };
+
     fetchSectionsAndPosts();
   }, []);
-
-  const handleSectionClick = (sectionId) => {
-    navigate(`/section/${sectionId}`);
-  };
-
-  const handleMovePost = async (postId, currentSectionId, newSectionId) => {
-    try {
-      const currentSectionRef = doc(db, 'sections', currentSectionId);
-      const currentSectionSnapshot = await getDoc(currentSectionRef);
-      if (currentSectionSnapshot.exists()) {
-        const currentPostIds = currentSectionSnapshot.data().postIds.split(',');
-        const updatedPostIds = currentPostIds.filter(id => id !== postId);
-        await updateDoc(currentSectionRef, { postIds: updatedPostIds.join(',') });
-      }
-
-      const newSectionRef = doc(db, 'sections', newSectionId);
-      const newSectionSnapshot = await getDoc(newSectionRef);
-      if (newSectionSnapshot.exists()) {
-        const newPostIds = newSectionSnapshot.data().postIds.split(',');
-        const updatedPostIds = [...newPostIds, postId];
-        await updateDoc(newSectionRef, { postIds: updatedPostIds.join(',') });
-      }
-
-      fetchSectionsAndPosts();
-    } catch (error) {
-      console.error('Error moving post:', error);
-    }
-  };
 
   const handlePostClick = (postId) => {
     navigate(`/posts/${postId}`);
   };
 
-  const scrollLeft = () => {
-    if (scrollContainer.current) {
-      scrollContainer.current.scrollLeft -= 300;
+  const goToNextSlide = () => {
+    if (scrollRef.current) {
+      const newIndex = Math.min(sections[0].posts.length - 1, Math.floor(scrollRef.current.scrollLeft / cardWidth) + 1);
+      scrollRef.current.scrollTo({
+        left: newIndex * cardWidth,
+        behavior: 'smooth',
+      });
     }
   };
 
-  const scrollRight = () => {
-    if (scrollContainer.current) {
-      scrollContainer.current.scrollLeft += 300;
+  const goToPrevSlide = () => {
+    if (scrollRef.current) {
+      const newIndex = Math.max(0, Math.floor(scrollRef.current.scrollLeft / cardWidth) - 1);
+      scrollRef.current.scrollTo({
+        left: newIndex * cardWidth,
+        behavior: 'smooth',
+      });
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      {sections.map(section => (
-        <div key={section.id} className="mb-12 relative">
-          <div className="relative rounded-lg overflow-hidden shadow-2xl bg-gradient-to-br from-gray-800 to-gray-900">
-            <h2 className="text-4xl font-extrabold py-6 bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text text-center">
+    <motion.div
+      className="section-content bg-white text-black py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {sections.map((section) => (
+        <div key={section.id}>
+          <div className="flex items-center justify-center mb-4">
+            <hr className="border-gray-400 w-1/3" />
+            <h2 className="text-center text-3xl font-bold mx-4 text-yellow-500">
               {section.title}
             </h2>
-            <div className="relative flex items-center">
-              <button
-                className="absolute left-0 bg-gray-800 text-white p-2 rounded-full z-10"
-                onClick={scrollLeft}
-              >
-                &lt;
-              </button>
-              <div ref={scrollContainer} className="flex p-6 space-x-4 overflow-x-auto">
-                {section.posts.map(post => (
-                  <motion.div
-                    key={post.id}
-                    className="w-80 flex-shrink-0 relative rounded-lg shadow-lg"
-                    whileHover={{ scale: 1.05, boxShadow: '0 0 25px rgba(0, 0, 0, 0.4)' }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    onClick={() => handlePostClick(post.id)}
-                  >
-                    <Paper elevation={3} className="p-4 h-full flex flex-col justify-between cursor-pointer bg-gray-800 text-white rounded-lg transform transition-transform duration-300 hover:scale-105">
-                      <CardMedia
-                        component="img"
-                        height="180"
-                        image={post.imageUrl}
-                        alt={post.title}
-                        className="object-cover rounded-lg"
-                      />
-                      <div className="pt-4">
-                        <h3 className="text-xl mb-2 font-semibold">{post.title}</h3>
-                        <p className="text-sm font-bold text-black-800 text-shadow">Name: {post.name}</p>
-                      </div>
-                      <div className="flex justify-between mt-4 relative group">
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-                      </div>
-                    </Paper>
-                  </motion.div>
-                ))}
-              </div>
-              <button
-                className="absolute right-0 bg-gray-800 text-white p-2 rounded-full z-10"
-                onClick={scrollRight}
-              >
-                &gt;
-              </button>
+            <hr className="border-gray-400 w-1/3" />
+          </div>
+          <div className="flex justify-center items-center mb-4">
+            <motion.button
+              onClick={goToPrevSlide}
+              className={`p-2 ${scrollRef.current && scrollRef.current.scrollLeft === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <KeyboardArrowLeftIcon />
+            </motion.button>
+            <div
+              ref={scrollRef}
+              className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full"
+              style={{ maxHeight: '100vh', overflowY: 'hidden' }} // Ensure no vertical scrollbar
+            >
+              {section.posts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  className="w-80 flex-shrink-0"
+                  whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
+                  onClick={() => handlePostClick(post.id)}
+                >
+                  <Card className="h-full">
+                    <CardMedia
+                      component="img"
+                      style={{ height: '200px', objectFit: 'cover' }}
+                      image={post.imageUrl}
+                      alt={post.title}
+                    />
+                    <CardContent>
+                      {/* Add any additional content for the card here */}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </div>
+            <motion.button
+              onClick={goToNextSlide}
+              className={`p-2 ${scrollRef.current && scrollRef.current.scrollLeft >= (section.posts.length - 1) * cardWidth ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <KeyboardArrowRightIcon />
+            </motion.button>
           </div>
         </div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 
-export default SectionsAndPosts;
+export default SectionPostDetails;
