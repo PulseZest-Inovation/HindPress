@@ -7,6 +7,7 @@ import SectionPostDetails from '../Component/CategoriesSection/SectionPostDetail
 import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
 import WhatsAppButton from '../Component/Whatsapp/Chat';
+import QuiltedImageList from '../Component/Gallery/gallery';
 
 const Home = () => {
 
@@ -17,9 +18,9 @@ const Home = () => {
       <HeroSection />
       <CategoriesSection/>
       <SectionPostDetails/>
+      <QuiltedImageList/>
       <CounterBar/>
       <Footer />
-
       <WhatsAppButton phoneNumber="9598919119" />
     </div>
   );
