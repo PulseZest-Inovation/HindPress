@@ -8,7 +8,7 @@ import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
 import WhatsAppButton from '../Component/Whatsapp/Chat';
 import QuiltedImageList from '../Component/Gallery/gallery';
-
+import Blog from '../Component/Blog/blog';
 const Home = () => {
 
   return (
@@ -20,6 +20,7 @@ const Home = () => {
       <SectionPostDetails/>
       <QuiltedImageList/>
       <CounterBar/>
+      <Blog/>
       <Footer />
       <WhatsAppButton phoneNumber="9598919119" />
     </div>
