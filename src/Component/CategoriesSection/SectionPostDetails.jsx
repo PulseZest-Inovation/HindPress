@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CardMedia from '@mui/material/CardMedia';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Card from '@mui/material/Card';
@@ -20,10 +20,18 @@ const SectionPostDetails = () => {
   useEffect(() => {
     const fetchSectionsAndPosts = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'sections'));
+        // Fetch all posts
+        const postsSnapshot = await getDocs(collection(db, 'posts'));
+        const postsData = {};
+        postsSnapshot.forEach(doc => {
+          postsData[doc.id] = { id: doc.id, ...doc.data() };
+        });
+
+        // Fetch all sections
+        const sectionsSnapshot = await getDocs(collection(db, 'sections'));
         const sectionsData = [];
 
-        for (const docSnap of querySnapshot.docs) {
+        sectionsSnapshot.forEach(docSnap => {
           const sectionData = {
             id: docSnap.id,
             ...docSnap.data(),
@@ -31,21 +39,10 @@ const SectionPostDetails = () => {
           };
 
           const postIds = sectionData.postIds.split(',');
-
-          for (const postId of postIds) {
-            const postSnapshot = await getDoc(doc(db, 'posts', postId));
-            if (postSnapshot.exists()) {
-              sectionData.posts.push({
-                id: postId,
-                ...postSnapshot.data()
-              });
-            } else {
-              console.error(`Post with ID ${postId} not found.`);
-            }
-          }
+          sectionData.posts = postIds.map(postId => postsData[postId]).filter(post => post);
 
           sectionsData.push(sectionData);
-        }
+        });
 
         setSections(sectionsData);
         setLoading(false); // Set loading to false once data is fetched
@@ -65,14 +62,20 @@ const SectionPostDetails = () => {
     const scrollRef = scrollRefs.current[index];
     if (scrollRef) {
       const maxScrollLeft = scrollRef.scrollWidth - scrollRef.clientWidth;
-      scrollRef.scrollLeft = Math.min(scrollRef.scrollLeft + cardWidth, maxScrollLeft);
+      scrollRef.scrollTo({
+        left: Math.min(scrollRef.scrollLeft + cardWidth, maxScrollLeft),
+        behavior: 'smooth'
+      });
     }
   };
 
   const goToPrevSlide = (index) => {
     const scrollRef = scrollRefs.current[index];
     if (scrollRef) {
-      scrollRef.scrollLeft = Math.max(scrollRef.scrollLeft - cardWidth, 0);
+      scrollRef.scrollTo({
+        left: Math.max(scrollRef.scrollLeft - cardWidth, 0),
+        behavior: 'smooth'
+      });
     }
   };
 
