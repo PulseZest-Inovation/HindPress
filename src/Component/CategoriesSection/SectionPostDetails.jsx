@@ -130,11 +130,13 @@ const SectionPostDetails = () => {
                       component="img"
                       style={{ height: '200px', objectFit: 'cover' }}
                       image={post.imageUrl}
+
                       alt={post.title}
                     />
-                    <CardContent>
-                      {/* Add any additional content for the card here */}
+                    <CardContent style={{ fontWeight: 'bold', color: 'black' }}>
+                      {post.name}
                     </CardContent>
+
                   </Card>
                 </motion.div>
               ))}
