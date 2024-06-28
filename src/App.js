@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import Header from './Component/Header/header';
-import Footer from './Component/footer/footer';
+ 
 import Home from './Pages/home';
 import LoginComponent  from './Pages/LoginPage/loginPage';
 import AdminPage from './Pages/AdminPage/adminPage';
