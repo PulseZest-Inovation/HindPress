@@ -1,6 +1,7 @@
 import { Box, Container, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import WhatsAppButton from '../../Component/Whatsapp/Chat';
 
 const Footer = () => {
   return (
@@ -53,6 +54,7 @@ const Footer = () => {
           </Typography>
         </Box>
       </Container>
+      <WhatsAppButton phoneNumber="9598919119" />
     </Box>
   );
 };

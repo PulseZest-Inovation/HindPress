@@ -14,7 +14,7 @@ const SectionPostDetails = () => {
   const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading indicator
   const navigate = useNavigate();
-  const scrollRef = useRef(null);
+  const scrollRefs = useRef([]); // Multiple refs for each section
   const cardWidth = 320;
 
   useEffect(() => {
@@ -61,23 +61,18 @@ const SectionPostDetails = () => {
     navigate(`/posts/${postId}`);
   };
 
-  const goToNextSlide = () => {
-    if (scrollRef.current) {
-      const newIndex = Math.min(sections[0].posts.length - 1, Math.floor(scrollRef.current.scrollLeft / cardWidth) + 1);
-      scrollRef.current.scrollTo({
-        left: newIndex * cardWidth,
-        behavior: 'smooth',
-      });
+  const goToNextSlide = (index) => {
+    const scrollRef = scrollRefs.current[index];
+    if (scrollRef) {
+      const maxScrollLeft = scrollRef.scrollWidth - scrollRef.clientWidth;
+      scrollRef.scrollLeft = Math.min(scrollRef.scrollLeft + cardWidth, maxScrollLeft);
     }
   };
 
-  const goToPrevSlide = () => {
-    if (scrollRef.current) {
-      const newIndex = Math.max(0, Math.floor(scrollRef.current.scrollLeft / cardWidth) - 1);
-      scrollRef.current.scrollTo({
-        left: newIndex * cardWidth,
-        behavior: 'smooth',
-      });
+  const goToPrevSlide = (index) => {
+    const scrollRef = scrollRefs.current[index];
+    if (scrollRef) {
+      scrollRef.scrollLeft = Math.max(scrollRef.scrollLeft - cardWidth, 0);
     }
   };
 
@@ -96,7 +91,7 @@ const SectionPostDetails = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {sections.map((section) => (
+      {sections.map((section, index) => (
         <div key={section.id}>
           <div className="flex items-center justify-center mb-4">
             <hr className="border-gray-400 w-1/3" />
@@ -107,8 +102,8 @@ const SectionPostDetails = () => {
           </div>
           <div className="flex justify-center items-center mb-4">
             <motion.button
-              onClick={goToPrevSlide}
-              className={`p-2 ${scrollRef.current && scrollRef.current.scrollLeft === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              onClick={() => goToPrevSlide(index)}
+              className="p-2"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.3 }}
@@ -116,11 +111,11 @@ const SectionPostDetails = () => {
               <KeyboardArrowLeftIcon />
             </motion.button>
             <div
-              ref={scrollRef}
+              ref={(el) => (scrollRefs.current[index] = el)}
               className="overflow-x-hidden overflow-y-hidden flex space-x-4 w-full"
               style={{ maxHeight: '100vh', overflowY: 'hidden' }} // Ensure no vertical scrollbar
             >
-              {section.posts.map((post, index) => (
+              {section.posts.map((post) => (
                 <motion.div
                   key={post.id}
                   className="w-80 flex-shrink-0"
@@ -142,8 +137,8 @@ const SectionPostDetails = () => {
               ))}
             </div>
             <motion.button
-              onClick={goToNextSlide}
-              className={`p-2 ${scrollRef.current && scrollRef.current.scrollLeft >= (section.posts.length - 1) * cardWidth ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+              onClick={() => goToNextSlide(index)}
+              className="p-2"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               transition={{ duration: 0.3 }}
