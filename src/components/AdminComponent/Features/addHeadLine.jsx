@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { db } from '../../../utils/FireBase/firebaseConfig';
-import { collection, addDoc, getDocs, getDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc,deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 import PostSidebar from './PostSidebar'; // Adjust path as per your file structure
 
 const AddHeadLine = () => {
@@ -12,35 +12,29 @@ const AddHeadLine = () => {
   const [addingPost, setAddingPost] = useState(null); // ID of the section to which posts are being added
   const [removingPost, setRemovingPost] = useState(null); // ID of the post being removed
 
-  const fetchSections = async () => {
+  const fetchSections = useCallback(async () => {
     setLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, 'sections'));
-      const sectionsData = [];
+      const sectionsData = querySnapshot.docs.map(docRef => ({
+        id: docRef.id,
+        ...docRef.data(),
+        posts: []
+      }));
 
-      for (const docRef of querySnapshot.docs) {
-        const sectionData = {
-          id: docRef.id,
-          ...docRef.data(),
-          posts: []
-        };
+      const postIds = sectionsData.flatMap(section => section.postIds.split(','));
+      if (postIds.length > 0) {
+        const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', postIds));
+        const postsSnapshot = await getDocs(postsQuery);
 
-        const postIds = sectionData.postIds.split(',');
+        const postsMap = postsSnapshot.docs.reduce((map, docRef) => {
+          map[docRef.id] = { id: docRef.id, ...docRef.data() };
+          return map;
+        }, {});
 
-        for (const postId of postIds) {
-          const postRef = doc(db, 'posts', postId);
-          const postSnapshot = await getDoc(postRef);
-          if (postSnapshot.exists()) {
-            sectionData.posts.push({
-              id: postId,
-              ...postSnapshot.data()
-            });
-          } else {
-            console.error(`Post with ID ${postId} not found.`);
-          }
-        }
-
-        sectionsData.push(sectionData);
+        sectionsData.forEach(section => {
+          section.posts = section.postIds.split(',').map(postId => postsMap[postId]).filter(Boolean);
+        });
       }
 
       setSections(sectionsData);
@@ -49,11 +43,11 @@ const AddHeadLine = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSections();
-  }, []);
+  }, [fetchSections]);
 
   const handleAddSection = async () => {
     setAddingSection(true);
@@ -135,19 +129,16 @@ const AddHeadLine = () => {
     }
   };
 
-  const handlePostSelection = (postId) => {
-    if (newSection.postIds.includes(postId)) {
-      setNewSection(prevState => ({
-        ...prevState,
-        postIds: prevState.postIds.filter(id => id !== postId)
-      }));
-    } else {
-      setNewSection(prevState => ({
-        ...prevState,
-        postIds: [...prevState.postIds, postId]
-      }));
-    }
-  };
+  const handlePostSelection = useCallback((postId) => {
+    setNewSection(prevState => ({
+      ...prevState,
+      postIds: prevState.postIds.includes(postId)
+        ? prevState.postIds.filter(id => id !== postId)
+        : [...prevState.postIds, postId]
+    }));
+  }, []);
+
+  const memoizedSections = useMemo(() => sections, [sections]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Arial, sans-serif' }}>
@@ -173,7 +164,7 @@ const AddHeadLine = () => {
             <PostSidebar onSelectPost={handlePostSelection} />
 
             <div style={{ flex: 1 }}>
-              {sections.map(section => (
+              {memoizedSections.map(section => (
                 <div key={section.id} style={{ marginBottom: '30px', border: '1px solid #ccc', padding: '10px', borderRadius: '4px' }}>
                   <h3 style={{ marginBottom: '10px' }}>{section.title}</h3>
                   <ul style={{ listStyleType: 'none', padding: 0 }}>

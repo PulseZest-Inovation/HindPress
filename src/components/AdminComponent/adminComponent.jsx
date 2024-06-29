@@ -6,7 +6,7 @@ import AddCategoryComponent from './Features/addCategory';
 import ManageCategory from './Features/manageCategory';
 import AllPosts from './Features/allPosts';
 import AddHeadLine from './Features/addHeadLine';
-
+import Info from '../../components/AdminComponent/Features/info';
 
 const AdminComponent = () => {
   const [selectedSection, setSelectedSection] = useState('home');
@@ -24,6 +24,7 @@ const AdminComponent = () => {
         {selectedSection === 'add-category' && <AddCategoryComponent />}
         {selectedSection === 'manage-category' && <ManageCategory />}
         {selectedSection === 'all-category' && <AllPosts />}
+        {selectedSection === 'info' && <Info />}
       </div>
     </div>
   );

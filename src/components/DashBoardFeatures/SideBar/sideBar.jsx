@@ -61,7 +61,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
         >
           <List>
             {[
-              { text: 'Home', icon: <Home />, section: 'home' },
+              { text: 'DashBoard', icon: <Home />, section: 'home' },
               { text: 'Add Headline', icon: <AddAlert />, section: 'add-headline' },
               { text: 'Add Category', icon: <AddAPhoto />, section: 'add-category' },
               { text: 'Manage Posts', icon: <Category />, section: 'manage-category' },
