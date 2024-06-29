@@ -64,7 +64,7 @@ const Sidebar = ({ onItemClick, onLogout }) => {
               { text: 'DashBoard', icon: <Home />, section: 'home' },
               { text: 'Add Headline', icon: <AddAlert />, section: 'add-headline' },
               { text: 'Add Category', icon: <AddAPhoto />, section: 'add-category' },
-              { text: 'Manage Posts', icon: <Category />, section: 'manage-category' },
+              { text: 'Manage Posts', icon: <Category />, section: 'manage-posts' },
               { text: 'All Posts', icon: <ManageHistory />, section: 'all-category' },
               { text: 'Info', icon: <Info />, section: 'info' },
               { text: 'Logout', icon: <ExitToApp />, action: handleLogout }, // Logout button with Firebase logout

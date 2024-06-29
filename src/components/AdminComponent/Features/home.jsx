@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-100 rounded-lg shadow-lg" style={{ fontFamily: 'Kanit, sans-serif' }}>
       <h2 className="text-4xl text-center mt-12 font-semibold text-gray-800">
-        Welcome to Your Application
+        Welcome to Hind Press DashBoard
       </h2>
       <p className="text-base text-center mt-6 text-gray-600 font-normal">
         {selectedFeature.description}

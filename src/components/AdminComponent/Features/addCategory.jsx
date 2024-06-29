@@ -154,7 +154,8 @@ const AddCategoryComponent = () => {
   return (
     <div style={containerStyle}>
       <div style={formStyle}>
-        <h2>Add New Category</h2>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add New Category</h1>
+
         <input
           style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%' }}
           type="text"

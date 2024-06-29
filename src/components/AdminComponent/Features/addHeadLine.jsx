@@ -143,7 +143,8 @@ const AddHeadLine = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ maxWidth: '800px', width: '100%', padding: '20px' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Admin Page</h2>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add HeadLine</h1>
+
         <div style={{ marginBottom: '20px', display: 'flex' }}>
           <input
             type="text"
