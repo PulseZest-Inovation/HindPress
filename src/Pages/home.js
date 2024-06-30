@@ -1,7 +1,6 @@
 import React from 'react';
 import Blog from '../Component/Blog/blog';
 import SectionPostDetails from '../Component/CategoriesSection/SectionPostDetails';
-import CategoriesSection from '../Component/CategoriesSection/categoriesSection';
 import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
 import QuiltedImageList from '../Component/Gallery/gallery';
@@ -17,7 +16,6 @@ const Home = () => {
       <ResponsiveAppBar/>
       <HeroSection />
       <CounterBar/>
-      <CategoriesSection/>
       <SectionPostDetails/>
       <QuiltedImageList/>
       <Blog/>
