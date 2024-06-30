@@ -11,6 +11,7 @@ const AddHeadLine = () => {
   const [deletingSection, setDeletingSection] = useState(null); // ID of the section being deleted
   const [addingPost, setAddingPost] = useState(null); // ID of the section to which posts are being added
   const [removingPost, setRemovingPost] = useState(null); // ID of the post being removed
+  const [searchTerm, setSearchTerm] = useState(''); // State for the search term
 
   const fetchSections = useCallback(async () => {
     setLoading(true);
@@ -141,12 +142,24 @@ const AddHeadLine = () => {
     }));
   }, []);
 
-  const memoizedSections = useMemo(() => sections, [sections]);
+  const memoizedSections = useMemo(() => {
+    return sections.filter(section =>
+      section.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [sections, searchTerm]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ maxWidth: '800px', width: '100%', padding: '20px' }}>
         <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add HeadLine</h1>
+
+        <input
+          type="text"
+          placeholder="Search Sections"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ padding: '10px', fontSize: '16px', width: '100%', marginBottom: '20px', border: '1px solid #ccc', borderRadius: '4px' }}
+        />
 
         <div style={{ marginBottom: '20px', display: 'flex' }}>
           <input
