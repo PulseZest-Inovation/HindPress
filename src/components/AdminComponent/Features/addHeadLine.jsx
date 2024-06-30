@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { db } from '../../../utils/FireBase/firebaseConfig';
-import { collection, addDoc, getDocs, getDoc,deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc, deleteDoc, doc, updateDoc, query, where } from 'firebase/firestore';
 import PostSidebar from './PostSidebar'; // Adjust path as per your file structure
 
 const AddHeadLine = () => {
@@ -22,7 +22,10 @@ const AddHeadLine = () => {
         posts: []
       }));
 
-      const postIds = sectionsData.flatMap(section => section.postIds.split(','));
+      // Prepare an array of all post IDs across sections
+      const postIds = sectionsData.flatMap(section => (section.postIds || '').split(',')).filter(Boolean);
+      
+      // Fetch posts only if there are postIds to query
       if (postIds.length > 0) {
         const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', postIds));
         const postsSnapshot = await getDocs(postsQuery);
@@ -33,7 +36,7 @@ const AddHeadLine = () => {
         }, {});
 
         sectionsData.forEach(section => {
-          section.posts = section.postIds.split(',').map(postId => postsMap[postId]).filter(Boolean);
+          section.posts = (section.postIds || '').split(',').map(postId => postsMap[postId]).filter(Boolean);
         });
       }
 
@@ -143,7 +146,7 @@ const AddHeadLine = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ maxWidth: '800px', width: '100%', padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add HeadLine</h1>
+        <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add HeadLine</h1>
 
         <div style={{ marginBottom: '20px', display: 'flex' }}>
           <input
