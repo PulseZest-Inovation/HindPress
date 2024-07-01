@@ -16,14 +16,17 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <ResponsiveAppBar/>
+      <br></br>
+      <br></br>
+      <br></br>
+      <ResponsiveAppBar />
       <HeroSection />
       <Poster1 />
-      <CategoriesSection/>
-      <SectionPostDetails/>
-      <QuiltedImageList/>
-      <CounterBar/>
-      <Blog/>
+      <CategoriesSection />
+      <SectionPostDetails />
+      <QuiltedImageList />
+      <CounterBar />
+      <Blog />
       <Footer />
       <WhatsAppButton phoneNumber="9598919119" />
     </div>
