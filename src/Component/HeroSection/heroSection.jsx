@@ -5,27 +5,38 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, getDocs, query, limit } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const HeroSection = () => {
   const [posts, setPosts] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const scrollRef = useRef(null);
   const controls = useAnimation();
-  const cardWidth = 320; // Card width + margin
+  const cardWidth = 320;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const postsCollection = collection(db, 'posts');
-        const postsQuery = query(postsCollection, limit(7)); // Fetching 7 random posts
-        const querySnapshot = await getDocs(postsQuery);
+        const sectionsCollection = collection(db, 'sections');
+        const sectionsSnapshot = await getDocs(sectionsCollection);
+        const postPromises = [];
 
-        const postsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
+        sectionsSnapshot.forEach((sectionDoc) => {
+          const postIds = sectionDoc.data().postIds;
+          if (postIds) {
+            const postIdsArray = postIds.split(',');
+            const randomPostId = postIdsArray[Math.floor(Math.random() * postIdsArray.length)];
+            const postDocRef = doc(db, 'posts', randomPostId.trim());
+            postPromises.push(getDoc(postDocRef));
+          }
+        });
+
+        const postDocs = await Promise.all(postPromises);
+        const postsData = postDocs.map((postDoc) => ({
+          id: postDoc.id,
+          ...postDoc.data(),
         }));
 
         setPosts(postsData);
@@ -38,7 +49,6 @@ const HeroSection = () => {
   }, []);
 
   useEffect(() => {
-    // Animate scrolling on current image index change
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         left: currentImageIndex * cardWidth,
@@ -61,7 +71,7 @@ const HeroSection = () => {
 
   return (
     <motion.div
-      className="section-content bg-purple-950 text-white py-8"
+      className="section-content bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-8"
       initial={{ x: '-100vw', opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 50 }}
@@ -69,8 +79,8 @@ const HeroSection = () => {
       <div className="flex justify-center items-center mb-4 space-x-4">
         <motion.button
           onClick={goToPrevSlide}
-          className={`p-2 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
+          className={`p-2 rounded-full bg-white text-purple-500 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          whileHover={{ scale: 1.1, backgroundColor: '#f0f0f0' }}
           whileTap={{ scale: 0.9 }}
         >
           <KeyboardArrowLeftIcon />
@@ -83,14 +93,14 @@ const HeroSection = () => {
           {posts.map((post, index) => (
             <motion.div
               key={post.id}
-              className="w-80 flex-shrink-0"
+              className="w-80 flex-shrink-0 rounded-lg shadow-lg"
               whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
               <Link to={`/posts/${post.id}`} className="block">
-                <Card className="h-full">
+                <Card className="h-full rounded-lg overflow-hidden">
                   <CardMedia
                     component="img"
                     src={post.imageUrl}
@@ -98,7 +108,7 @@ const HeroSection = () => {
                     style={{ height: '200px', objectFit: 'cover' }}
                   />
                   <CardContent>
-                    {/* Add any additional content for the card here */}
+                    <h3 className="text-lg font-semibold">{post.name}</h3>
                   </CardContent>
                 </Card>
               </Link>
@@ -107,8 +117,8 @@ const HeroSection = () => {
         </div>
         <motion.button
           onClick={goToNextSlide}
-          className={`p-2 ${currentImageIndex >= posts.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          whileHover={{ scale: 1.1 }}
+          className={`p-2 rounded-full bg-white text-purple-500 ${currentImageIndex >= posts.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          whileHover={{ scale: 1.1, backgroundColor: '#f0f0f0' }}
           whileTap={{ scale: 0.9 }}
         >
           <KeyboardArrowRightIcon />
