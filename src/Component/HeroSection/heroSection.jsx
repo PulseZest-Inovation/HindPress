@@ -71,15 +71,30 @@ const HeroSection = () => {
 
   return (
     <motion.div
-      className="section-content bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-8"
+      className="section-content"
+      style={{
+        background: 'linear-gradient(to right, #6a11cb, #2575fc)',
+        color: 'white',
+        padding: '2rem',
+        fontFamily: "'Kanit', sans-serif",
+        position: 'relative'
+      }}
       initial={{ x: '-100vw', opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 50 }}
     >
-      <div className="flex justify-center items-center mb-4 space-x-4">
+      <div className="flex justify-center items-center mb-4 relative" style={{ zIndex: 1 }}>
         <motion.button
           onClick={goToPrevSlide}
-          className={`p-2 rounded-full bg-white text-purple-500 ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          className={`absolute left-0 p-2 rounded-full ${currentImageIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#6a11cb',
+            transition: 'background-color 0.3s, transform 0.3s',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 10
+          }}
           whileHover={{ scale: 1.1, backgroundColor: '#f0f0f0' }}
           whileTap={{ scale: 0.9 }}
         >
@@ -94,13 +109,18 @@ const HeroSection = () => {
             <motion.div
               key={post.id}
               className="w-80 flex-shrink-0 rounded-lg shadow-lg"
-              whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)' }}
+              style={{
+                transition: 'transform 0.3s, box-shadow 0.3s',
+                transform: 'rotate(0deg)',
+                position: 'relative'
+              }}
+              whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(0, 0, 0, 0.3)', transform: 'rotate(1deg)' }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
               <Link to={`/posts/${post.id}`} className="block">
-                <Card className="h-full rounded-lg overflow-hidden">
+                <Card className="h-full rounded-lg overflow-hidden" style={{ backgroundColor: '#ffffff' }}>
                   <CardMedia
                     component="img"
                     src={post.imageUrl}
@@ -108,7 +128,7 @@ const HeroSection = () => {
                     style={{ height: '200px', objectFit: 'cover' }}
                   />
                   <CardContent>
-                    <h3 className="text-lg font-semibold">{post.name}</h3>
+                    <h3 className="text-lg font-semibold" style={{ color: '#6a11cb' }}>{post.name}</h3>
                   </CardContent>
                 </Card>
               </Link>
@@ -117,7 +137,15 @@ const HeroSection = () => {
         </div>
         <motion.button
           onClick={goToNextSlide}
-          className={`p-2 rounded-full bg-white text-purple-500 ${currentImageIndex >= posts.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          className={`absolute right-0 p-2 rounded-full ${currentImageIndex >= posts.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#6a11cb',
+            transition: 'background-color 0.3s, transform 0.3s',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 10
+          }}
           whileHover={{ scale: 1.1, backgroundColor: '#f0f0f0' }}
           whileTap={{ scale: 0.9 }}
         >

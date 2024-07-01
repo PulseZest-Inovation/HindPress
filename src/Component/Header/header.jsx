@@ -1,40 +1,59 @@
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaQuestionCircle, FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png'; // Ensure the path is correct
 import { db } from '../../utils/FireBase/firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
-const Header = ({ onSearchResults }) => {
+const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [postResults, setPostResults] = useState([]);
+  const [categoryResults, setCategoryResults] = useState([]);
   const navigate = useNavigate();
 
-  const handleSearch = async (e) => {
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        if (searchQuery.trim() === '') {
+          setPostResults([]);
+          setCategoryResults([]);
+          return;
+        }
+
+        const allPosts = await getDocs(collection(db, 'posts'));
+        const allCategories = await getDocs(collection(db, 'categories'));
+
+        const posts = allPosts.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(post => post.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        const categories = allCategories.docs
+          .map(doc => ({ id: doc.id, ...doc.data() }))
+          .filter(category => category.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+        setPostResults(posts);
+        setCategoryResults(categories);
+      } catch (error) {
+        console.error("Error searching: ", error);
+      }
+    };
+
+    fetchSearchResults();
+  }, [searchQuery]);
+
+  const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim() === '') return;
+  };
 
-    try {
-      const searchResults = [];
-
-      // Search in posts
-      const postQuery = query(collection(db, 'posts'), where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'));
-      const postQuerySnapshot = await getDocs(postQuery);
-      const postResults = postQuerySnapshot.docs.map(doc => ({ id: doc.id, type: 'post', ...doc.data() }));
-      searchResults.push(...postResults);
-
-      // Search in categories
-      const categoryQuery = query(collection(db, 'categories'), where('name', '>=', searchQuery), where('name', '<=', searchQuery + '\uf8ff'));
-      const categoryQuerySnapshot = await getDocs(categoryQuery);
-      const categoryResults = categoryQuerySnapshot.docs.map(doc => ({ id: doc.id, type: 'category', ...doc.data() }));
-      searchResults.push(...categoryResults);
-
-      // Add more queries for other collections if needed
-
-      onSearchResults(searchResults);
-      navigate('/search'); // Assuming you have a search results route
-    } catch (error) {
-      console.error("Error searching: ", error);
+  const handleResultClick = (result) => {
+    if (result.type === 'post') {
+      navigate(`/posts/${result.id}`);
+    } else if (result.type === 'category') {
+      navigate(`/category/${result.name}`);
     }
+    setSearchQuery('');
+    setPostResults([]);
+    setCategoryResults([]);
   };
 
   return (
@@ -55,6 +74,34 @@ const Header = ({ onSearchResults }) => {
           <FaSearch />
         </button>
       </form>
+      {(postResults.length > 0 || categoryResults.length > 0) && (
+        <div className="absolute top-full left-0 bg-white w-full z-10 shadow-lg flex">
+          {postResults.length > 0 && (
+            <div className="w-1/2 border-r border-gray-200">
+              <h2 className="text-xl font-semibold p-4">Posts</h2>
+              <ul className="divide-y divide-gray-200">
+                {postResults.map((post, index) => (
+                  <li key={index} className="py-2 px-4 cursor-pointer hover:bg-gray-100" onClick={() => handleResultClick({ type: 'post', ...post })}>
+                    <span>{post.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {categoryResults.length > 0 && (
+            <div className="w-1/2">
+              <h2 className="text-xl font-semibold p-4">Categories</h2>
+              <ul className="divide-y divide-gray-200">
+                {categoryResults.map((category, index) => (
+                  <li key={index} className="py-2 px-4 cursor-pointer hover:bg-gray-100" onClick={() => handleResultClick({ type: 'category', ...category })}>
+                    <span>{category.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
       <div className="flex items-center space-x-6">
         <div className="flex items-center text-gray-700 hover:text-purple-600 cursor-pointer">
           <FaQuestionCircle className="mr-1" />

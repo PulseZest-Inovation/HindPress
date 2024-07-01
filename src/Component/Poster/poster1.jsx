@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DesignGalleryImage1 from '../../assets/images/o1.webp';
 
-const App = () => {
+const PosterPage = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
 
@@ -21,15 +21,19 @@ const App = () => {
     <div className="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
       {imageLoaded ? (
         <div className="relative text-center">
-          <div className="max-w-full" style={{ height: 'auto' }}>
+          <a
+            href="/poster-details" // Replace with actual route path
+            style={{ display: 'block', cursor: 'pointer', textDecoration: 'none' }}
+          >
             <img
               src={imageSrc}
               alt="Blurred Placeholder"
               className="w-full h-auto object-cover rounded-lg shadow-lg"
+              style={{ cursor: 'pointer' }}
             />
-          </div>
+          </a>
           <div className="absolute inset-0 flex items-center justify-center">
-            
+            {/* Any overlay content or actions */}
           </div>
         </div>
       ) : (
@@ -39,4 +43,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default PosterPage;

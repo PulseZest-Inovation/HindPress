@@ -18,6 +18,7 @@ const Home = () => {
       <br></br>
       <br></br>
       <br></br>
+      <br></br>
       <ResponsiveAppBar/>
       <HeroSection />
       < Poster1/>

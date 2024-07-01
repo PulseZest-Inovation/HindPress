@@ -6,6 +6,7 @@ import LoginComponent from './Pages/LoginPage/loginPage';
 import AdminPage from './Pages/AdminPage/adminPage';
 import PostDetails from './Component/CategoriesSection/PostDetails';
 import CategoryPosts from './Component/CategoriesSection/CategoryPosts';
+import PosterDetails from './Component/Poster/posterDetail';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -67,6 +68,7 @@ const App = () => {
           <Route path="/admin/*" element={<PrivateRoute element={<AdminPage />} />} />
           <Route path="/category/:categoryName" element={<CategoryPosts />} />
           <Route path="/posts/:postId" element={<PostDetails />} />
+          <Route path="/poster-details" element={<PosterDetails />} /> 
         </Routes>
       </Router>
     </div>
