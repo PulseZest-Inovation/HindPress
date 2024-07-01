@@ -9,6 +9,7 @@ import HeroSection from '../Component/HeroSection/heroSection';
 import Poster1 from '../Component/Poster/poster1';
 import WhatsAppButton from '../Component/Whatsapp/Chat';
 import Footer from '../Component/footer/footer';
+import CategoriesSection from '../Component/CategoriesSection/categoriesSection';
 
 const Home = () => {
 
@@ -18,6 +19,7 @@ const Home = () => {
       <ResponsiveAppBar/>
       <HeroSection />
       <Poster1 />
+      <CategoriesSection/>
       <SectionPostDetails/>
       <QuiltedImageList/>
       <CounterBar/>
