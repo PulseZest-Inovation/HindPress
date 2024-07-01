@@ -1,14 +1,9 @@
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import CardMedia from '@mui/material/CardMedia';
 import Paper from '@mui/material/Paper';
 import { collection, getDocs } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick-theme.css';
-import 'slick-carousel/slick/slick.css';
 import { db } from '../../utils/FireBase/firebaseConfig';
 
 const CategoriesSection = () => {
@@ -36,49 +31,10 @@ const CategoriesSection = () => {
     navigate(`/category/${categoryName}`);
   };
 
-  // Custom Arrow Component
-  const CustomPrevArrow = ({ onClick }) => (
-    <div className="custom-arrow left-arrow" onClick={onClick}>
-      <KeyboardArrowLeftIcon style={{ fontSize: 40 }} />
-    </div>
-  );
-
-  const CustomNextArrow = ({ onClick }) => (
-    <div className="custom-arrow right-arrow" onClick={onClick}>
-      <KeyboardArrowRightIcon style={{ fontSize: 40 }} />
-    </div>
-  );
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    prevArrow: <CustomPrevArrow />,
-    nextArrow: <CustomNextArrow />,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        }
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        }
-      }
-    ]
-  };
-
   return (
     <div className="categories-section py-8 bg-gray-100">
       <h2 className="text-center text-3xl mb-8">Categories</h2>
-      <Slider {...settings}>
+      <div className="flex justify-center items-center flex-wrap gap-4">
         {categories.map((category) => (
           <motion.div
             key={category.id}
@@ -104,7 +60,7 @@ const CategoriesSection = () => {
             </Paper>
           </motion.div>
         ))}
-      </Slider>
+      </div>
     </div>
   );
 };

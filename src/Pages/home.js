@@ -10,22 +10,20 @@ import HeroSection from '../Component/HeroSection/heroSection';
 import Poster1 from '../Component/Poster/poster1';
 import WhatsAppButton from '../Component/Whatsapp/Chat';
 import Footer from '../Component/footer/footer';
-
-
 const Home = () => {
 
   return (
     <div>
-            <br/>
-            <br/>
-            <br/>
       <Header />
+      <br></br>
+      <br></br>
+      <br></br>
       <ResponsiveAppBar/>
       <HeroSection />
-      <Poster1 />
+      < Poster1/>
       <SectionPostDetails/>
-      <CategoriesSection/>
       <QuiltedImageList/>
+      <CategoriesSection/>
       <CounterBar/>
       <Blog/>
       <Footer />
