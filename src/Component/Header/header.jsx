@@ -1,8 +1,8 @@
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { FaQuestionCircle, FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png'; // Ensure the path is correct
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../utils/FireBase/firebaseConfig';
 
 const Header = ({ onSearchResults }) => {
