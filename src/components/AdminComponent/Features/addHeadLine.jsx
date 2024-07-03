@@ -22,25 +22,42 @@ const AddHeadLine = () => {
         ...docRef.data(),
         posts: []
       }));
-
+  
       // Prepare an array of all post IDs across sections
       const postIds = sectionsData.flatMap(section => (section.postIds || '').split(',')).filter(Boolean);
-      
+  
       // Fetch posts only if there are postIds to query
       if (postIds.length > 0) {
-        const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', postIds));
-        const postsSnapshot = await getDocs(postsQuery);
-
-        const postsMap = postsSnapshot.docs.reduce((map, docRef) => {
-          map[docRef.id] = { id: docRef.id, ...docRef.data() };
+        // Function to fetch posts in chunks of up to 30 IDs
+        const fetchPostsInChunks = async (ids) => {
+          const chunkedPosts = [];
+          const chunks = [];
+          for (let i = 0; i < ids.length; i += 30) {
+            chunks.push(ids.slice(i, i + 30));
+          }
+          
+          for (const chunk of chunks) {
+            const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', chunk));
+            const postsSnapshot = await getDocs(postsQuery);
+            postsSnapshot.docs.forEach(docRef => {
+              chunkedPosts.push({ id: docRef.id, ...docRef.data() });
+            });
+          }
+          return chunkedPosts;
+        };
+  
+        const postsData = await fetchPostsInChunks(postIds);
+  
+        const postsMap = postsData.reduce((map, post) => {
+          map[post.id] = post;
           return map;
         }, {});
-
+  
         sectionsData.forEach(section => {
           section.posts = (section.postIds || '').split(',').map(postId => postsMap[postId]).filter(Boolean);
         });
       }
-
+  
       setSections(sectionsData);
     } catch (error) {
       console.error('Error fetching sections:', error);
