@@ -18,6 +18,7 @@ const AddCategoryComponent = () => {
   const [loading, setLoading] = useState(false); // Loading state for fetching categories
   const [adding, setAdding] = useState(false); // Loading state for adding category
   const [deleting, setDeleting] = useState(''); // Loading state for deleting category (category ID being deleted)
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -28,6 +29,7 @@ const AddCategoryComponent = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        categoriesData.sort((a, b) => a.id.localeCompare(b.id)); // Sort categories by id
         setCategories(categoriesData);
       } catch (error) {
         console.error('Error fetching categories:', error.message);
@@ -68,7 +70,8 @@ const AddCategoryComponent = () => {
       });
 
       // Update state with the new category
-      setCategories([...categories, { id: categoryId, name: categoryName, fileUrl: fileUrl, createdAt: createdAt }]);
+      const newCategory = { id: categoryId, name: categoryName, fileUrl: fileUrl, createdAt: createdAt };
+      setCategories([...categories, newCategory].sort((a, b) => a.id.localeCompare(b.id)));
 
       // Clear form fields
       setCategoryName('');
@@ -152,9 +155,20 @@ const AddCategoryComponent = () => {
     marginBottom: '20px',
   };
 
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div style={containerStyle}>
       <div style={formStyle}>
+        <input
+          style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%' }}
+          type="text"
+          placeholder="Search Categories"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add New Category</h1>
         <input
           style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%' }}
@@ -177,7 +191,7 @@ const AddCategoryComponent = () => {
         {loading ? (
           <CircularProgress />
         ) : (
-          categories.map(category => (
+          filteredCategories.map(category => (
             <StyledPaper key={category.id}>
               <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                 <div style={{ flex: 1 }}>

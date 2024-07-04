@@ -22,10 +22,10 @@ const AddHeadLine = () => {
         ...docRef.data(),
         posts: []
       }));
-  
+
       // Prepare an array of all post IDs across sections
       const postIds = sectionsData.flatMap(section => (section.postIds || '').split(',')).filter(Boolean);
-  
+
       // Fetch posts only if there are postIds to query
       if (postIds.length > 0) {
         // Function to fetch posts in chunks of up to 30 IDs
@@ -35,7 +35,7 @@ const AddHeadLine = () => {
           for (let i = 0; i < ids.length; i += 30) {
             chunks.push(ids.slice(i, i + 30));
           }
-          
+
           for (const chunk of chunks) {
             const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', chunk));
             const postsSnapshot = await getDocs(postsQuery);
@@ -45,19 +45,19 @@ const AddHeadLine = () => {
           }
           return chunkedPosts;
         };
-  
+
         const postsData = await fetchPostsInChunks(postIds);
-  
+
         const postsMap = postsData.reduce((map, post) => {
           map[post.id] = post;
           return map;
         }, {});
-  
+
         sectionsData.forEach(section => {
           section.posts = (section.postIds || '').split(',').map(postId => postsMap[postId]).filter(Boolean);
         });
       }
-  
+
       setSections(sectionsData);
     } catch (error) {
       console.error('Error fetching sections:', error);
@@ -108,10 +108,10 @@ const AddHeadLine = () => {
       const sectionSnapshot = await getDoc(sectionRef);
       const currentPostIds = sectionSnapshot.data().postIds || '';
 
-      // Add new post IDs to the existing comma-separated string
-      const updatedPostIds = currentPostIds
-        ? `${currentPostIds},${newSection.postIds.join(',')}`
-        : newSection.postIds.join(',');
+      // Add new post IDs to the existing comma-separated string, avoiding duplicates
+      const currentPostIdArray = currentPostIds.split(',').filter(Boolean);
+      const newPostIds = newSection.postIds.filter(postId => !currentPostIdArray.includes(postId));
+      const updatedPostIds = [...currentPostIdArray, ...newPostIds].join(',');
 
       await updateDoc(sectionRef, {
         postIds: updatedPostIds
