@@ -37,7 +37,7 @@ const CategoryHead = () => {
 
   return (
     <div className="bg-white shadow">
-      <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
+      <nav className="container mx-auto px-6 py-3 flex justify-evenly items-center">
         <div className="text-red-700 font-bold">
           {/* <a href="#" className="hover:text-red-900">Same Day Delivery</a> */}
         </div>

@@ -39,11 +39,16 @@ const ManageCategory = () => {
   }, []);
 
   const handleCheckboxChange = (categoryId) => {
-    if (selectedCategories.includes(categoryId)) {
-      setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
-    } else {
-      setSelectedCategories([...selectedCategories, categoryId]);
-    }
+    console.log(`Checkbox ${categoryId} clicked`);
+    setSelectedCategories(prevSelectedCategories => {
+      if (prevSelectedCategories.includes(categoryId)) {
+        console.log(`Removing ${categoryId} from selected categories`);
+        return prevSelectedCategories.filter(id => id !== categoryId);
+      } else {
+        console.log(`Adding ${categoryId} to selected categories`);
+        return [...prevSelectedCategories, categoryId];
+      }
+    });
   };
 
   const handleAddPost = async (e) => {

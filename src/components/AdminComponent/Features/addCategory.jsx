@@ -50,7 +50,8 @@ const AddCategoryComponent = () => {
       }
 
       // Generate unique ID for the category
-      const categoryId = `cat${(categories.length + 1).toString().padStart(2, '0')}`;
+      const nextId = categories.length + 1;
+      const categoryId = `cat${String(nextId).padStart(2, '0')}`;
 
       // Upload file to Firebase Storage
       const fileRef = ref(storage, `categories/${uuidv4()}`);
@@ -154,8 +155,7 @@ const AddCategoryComponent = () => {
   return (
     <div style={containerStyle}>
       <div style={formStyle}>
-      <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add New Category</h1>
-
+        <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2xl', fontWeight: 'bold' }}>Add New Category</h1>
         <input
           style={{ display: 'block', marginBottom: '10px', padding: '10px', width: '100%' }}
           type="text"
