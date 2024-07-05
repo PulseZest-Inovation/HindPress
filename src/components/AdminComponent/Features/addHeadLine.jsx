@@ -73,13 +73,13 @@ const AddHeadLine = () => {
   const handleAddSection = async () => {
     setAddingSection(true);
     try {
-      const postIdsString = newSection.postIds.join(',');
+      const postIdsString = [...new Set(newSection.postIds)].join(',');
       const sectionData = { ...newSection, postIds: postIdsString };
-
+  
       const docRef = await addDoc(collection(db, 'sections'), sectionData);
       console.log('Section added with ID:', docRef.id);
       setNewSection({ title: '', postIds: [] });
-
+  
       fetchSections();
     } catch (error) {
       console.error('Error adding section:', error);
@@ -107,18 +107,22 @@ const AddHeadLine = () => {
       const sectionRef = doc(db, 'sections', sectionId);
       const sectionSnapshot = await getDoc(sectionRef);
       const currentPostIds = sectionSnapshot.data().postIds || '';
-
-      // Add new post IDs to the existing comma-separated string, avoiding duplicates
+  
+      // Split current post IDs into an array and filter out any empty strings
       const currentPostIdArray = currentPostIds.split(',').filter(Boolean);
-      const newPostIds = newSection.postIds.filter(postId => !currentPostIdArray.includes(postId));
-      const updatedPostIds = [...currentPostIdArray, ...newPostIds].join(',');
-
+      
+      // Merge current post IDs with new ones and deduplicate
+      const updatedPostIds = [...new Set([...currentPostIdArray, ...newSection.postIds])].join(',');
+  
       await updateDoc(sectionRef, {
         postIds: updatedPostIds
       });
-
+  
       console.log('Posts added to section:', sectionId);
-
+  
+      // Clear selected posts after adding them to the section
+      setNewSection({ ...newSection, postIds: [] });
+  
       fetchSections();
     } catch (error) {
       console.error('Error adding posts to section:', error);
@@ -126,6 +130,7 @@ const AddHeadLine = () => {
       setAddingPost(null);
     }
   };
+  
 
   const handleRemovePostFromSection = async (sectionId, postIdToRemove) => {
     setRemovingPost(postIdToRemove);
