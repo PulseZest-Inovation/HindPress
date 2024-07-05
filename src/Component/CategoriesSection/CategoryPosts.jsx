@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Paper from '@mui/material/Paper';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { db } from '../../utils/FireBase/firebaseConfig';
 import Header from "../Header/header";
 import Footer from "../footer/footer";
 
@@ -26,7 +25,7 @@ const CategoryPosts = () => {
           categoryQuerySnapshot.forEach(doc => {
             if (doc.data().name === categoryName) {
               setCategoryNameFromDB(doc.data().name);
-              fetchPosts(doc.data().id); // Fetch posts where categoryId matches category id
+              fetchPosts(doc.data().id);
             }
           });
         } catch (error) {
@@ -61,9 +60,9 @@ const CategoryPosts = () => {
   return (
     <div>
       <Header onSearchResults={(results) => setPosts(results)} />
-        <br></br>
-<br></br>
-<br></br>        
+      <br />
+      <br />
+      <br />
       <div className="category-posts-section py-8 bg-gray-100">
         <h2 className="text-center text-4xl font-bold mb-12 text-gray-800">{categoryNameFromDB}</h2>
         <div className="container mx-auto px-4">
@@ -93,7 +92,6 @@ const CategoryPosts = () => {
                   </div>
                   <p className="text-sm text-gray-600">{post.description}</p>
                 </CardContent>
-
               </motion.div>
             ))}
           </div>

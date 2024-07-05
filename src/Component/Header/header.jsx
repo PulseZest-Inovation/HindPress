@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { FaQuestionCircle, FaSearch, FaShoppingCart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/images/logo.png'; // Ensure the path is correct
+import logo from '../../assets/images/logo.png';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -58,8 +58,8 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center p-4 bg-white shadow-md fixed w-full top-0 z-10">
-      <div className="flex items-center">
-        <img src={logo} alt="Logo" className="h-10 mr-2" />
+      <div className="flex items-center space-x-2">
+        <img src={logo} alt="Logo" className="h-10 mr-2" style={{ objectFit: 'contain' }} />
         <h1 className="text-2xl font-bold text-gray-800">Hind Press</h1>
       </div>
       <form onSubmit={handleSearch} className="flex items-center relative w-1/2 max-w-lg">
@@ -69,8 +69,8 @@ const Header = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-purple-600"
-        />
-        <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-r-full hover:bg-purple-700 focus:outline-none">
+        /> 
+        <button type="submit" className="px-4 py-3 bg-purple-600 text-white rounded-r-full hover:bg-purple-700 focus:outline-none">
           <FaSearch />
         </button>
       </form>
@@ -107,8 +107,8 @@ const Header = () => {
           <FaQuestionCircle className="mr-1" />
           <span className="hidden md:inline">Help Center</span>
         </div>
-        <div className="flex items-center text-gray-700 hover:text-purple-600 cursor-pointer relative">
-          <FaShoppingCart className="mr-1" />
+        <div className="relative">
+          <FaShoppingCart className="text-gray-700 hover:text-purple-600 cursor-pointer" />
           <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">0</span>
         </div>
       </div>

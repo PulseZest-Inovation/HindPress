@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
 import Header from '../Header/header';
 import Footer from '../footer/footer';
 

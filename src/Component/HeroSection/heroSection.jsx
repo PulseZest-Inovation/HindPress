@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { motion, useAnimation } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { db } from '../../utils/FireBase/firebaseConfig';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const HeroSection = () => {
   const [posts, setPosts] = useState([]);
@@ -73,7 +73,7 @@ const HeroSection = () => {
     <motion.div
       className="section-content"
       style={{
-        background: 'linear-gradient(to right, #6a11cb, #2575fc)',
+        background: 'linear-gradient(to right, #d7b9ff, #7209b7)',
         color: 'white',
         padding: '2rem',
         fontFamily: "'Kanit', sans-serif",
