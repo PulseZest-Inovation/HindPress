@@ -2,7 +2,6 @@ import React from 'react';
 import Blog from '../Component/Blog/blog';
 import SectionPostDetails from '../Component/CategoriesSection/SectionPostDetails';
 import CategoriesSection from '../Component/CategoriesSection/categoriesSection';
-import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
 import QuiltedImageList from '../Component/Gallery/gallery';
 import Header from '../Component/Header/header';
@@ -15,10 +14,6 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <br/>
-      <br/>
-         <br/>
-      <ResponsiveAppBar/>
       <HeroSection />
       < Poster1/>
       <SectionPostDetails/>

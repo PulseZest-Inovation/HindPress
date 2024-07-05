@@ -70,19 +70,20 @@ const HeroSection = () => {
   };
 
   return (
-    <motion.div
-      className="section-content"
-      style={{
-        background: 'linear-gradient(to right, #d7b9ff, #7209b7)',
-        color: 'white',
-        padding: '2rem',
-        fontFamily: "'Kanit', sans-serif",
-        position: 'relative'
-      }}
-      initial={{ x: '-100vw', opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 50 }}
-    >
+<motion.div
+  className="section-content"
+  style={{
+    background: 'linear-gradient(to right, #d7b9ff, #7209b7)',
+    color: 'white',
+    padding: '2rem',
+    fontFamily: "'Kanit', sans-serif",
+    position: 'relative',
+    marginTop: '7.1rem'  // Adjusted to 10rem for more top margin
+  }}
+  initial={{ x: '-100vw', opacity: 0 }}
+  animate={{ x: 0, opacity: 1 }}
+  transition={{ type: 'spring', stiffness: 50 }}
+>
       <div className="flex justify-center items-center mb-4 relative" style={{ zIndex: 1 }}>
         <motion.button
           onClick={goToPrevSlide}
