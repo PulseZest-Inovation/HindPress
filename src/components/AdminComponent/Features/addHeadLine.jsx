@@ -22,10 +22,10 @@ const AddHeadLine = () => {
         ...docRef.data(),
         posts: []
       }));
-  
+
       // Prepare an array of all post IDs across sections
       const postIds = sectionsData.flatMap(section => (section.postIds || '').split(',')).filter(Boolean);
-  
+
       // Fetch posts only if there are postIds to query
       if (postIds.length > 0) {
         // Function to fetch posts in chunks of up to 30 IDs
@@ -35,7 +35,7 @@ const AddHeadLine = () => {
           for (let i = 0; i < ids.length; i += 30) {
             chunks.push(ids.slice(i, i + 30));
           }
-          
+
           for (const chunk of chunks) {
             const postsQuery = query(collection(db, 'posts'), where('__name__', 'in', chunk));
             const postsSnapshot = await getDocs(postsQuery);
@@ -45,19 +45,19 @@ const AddHeadLine = () => {
           }
           return chunkedPosts;
         };
-  
+
         const postsData = await fetchPostsInChunks(postIds);
-  
+
         const postsMap = postsData.reduce((map, post) => {
           map[post.id] = post;
           return map;
         }, {});
-  
+
         sectionsData.forEach(section => {
           section.posts = (section.postIds || '').split(',').map(postId => postsMap[postId]).filter(Boolean);
         });
       }
-  
+
       setSections(sectionsData);
     } catch (error) {
       console.error('Error fetching sections:', error);
@@ -73,13 +73,13 @@ const AddHeadLine = () => {
   const handleAddSection = async () => {
     setAddingSection(true);
     try {
-      const postIdsString = newSection.postIds.join(',');
+      const postIdsString = [...new Set(newSection.postIds)].join(',');
       const sectionData = { ...newSection, postIds: postIdsString };
-
+  
       const docRef = await addDoc(collection(db, 'sections'), sectionData);
       console.log('Section added with ID:', docRef.id);
       setNewSection({ title: '', postIds: [] });
-
+  
       fetchSections();
     } catch (error) {
       console.error('Error adding section:', error);
@@ -107,18 +107,22 @@ const AddHeadLine = () => {
       const sectionRef = doc(db, 'sections', sectionId);
       const sectionSnapshot = await getDoc(sectionRef);
       const currentPostIds = sectionSnapshot.data().postIds || '';
-
-      // Add new post IDs to the existing comma-separated string
-      const updatedPostIds = currentPostIds
-        ? `${currentPostIds},${newSection.postIds.join(',')}`
-        : newSection.postIds.join(',');
-
+  
+      // Split current post IDs into an array and filter out any empty strings
+      const currentPostIdArray = currentPostIds.split(',').filter(Boolean);
+      
+      // Merge current post IDs with new ones and deduplicate
+      const updatedPostIds = [...new Set([...currentPostIdArray, ...newSection.postIds])].join(',');
+  
       await updateDoc(sectionRef, {
         postIds: updatedPostIds
       });
-
+  
       console.log('Posts added to section:', sectionId);
-
+  
+      // Clear selected posts after adding them to the section
+      setNewSection({ ...newSection, postIds: [] });
+  
       fetchSections();
     } catch (error) {
       console.error('Error adding posts to section:', error);
@@ -126,6 +130,7 @@ const AddHeadLine = () => {
       setAddingPost(null);
     }
   };
+  
 
   const handleRemovePostFromSection = async (sectionId, postIdToRemove) => {
     setRemovingPost(postIdToRemove);
