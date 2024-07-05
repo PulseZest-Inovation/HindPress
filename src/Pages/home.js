@@ -1,14 +1,15 @@
 import React from 'react';
-import Header from '../Component/Header/header';
-import Footer from '../Component/footer/footer';
-import CategoriesSection from '../Component/CategoriesSection/categoriesSection';
-import HeroSection from '../Component/HeroSection/heroSection';
+import Blog from '../Component/Blog/blog';
 import SectionPostDetails from '../Component/CategoriesSection/SectionPostDetails';
+import CategoriesSection from '../Component/CategoriesSection/categoriesSection';
 import ResponsiveAppBar from '../Component/CategoryHeader/catygoryHead';
 import CounterBar from '../Component/Counter/counter';
-import WhatsAppButton from '../Component/Whatsapp/Chat';
 import QuiltedImageList from '../Component/Gallery/gallery';
-import Blog from '../Component/Blog/blog';
+import Header from '../Component/Header/header';
+import HeroSection from '../Component/HeroSection/heroSection';
+import Poster1 from '../Component/Poster/poster1';
+import WhatsAppButton from '../Component/Whatsapp/Chat';
+import Footer from '../Component/footer/footer';
 const Home = () => {
 
   return (
@@ -17,11 +18,13 @@ const Home = () => {
       <br></br>
       <br></br>
       <br></br>
+      <br></br>
       <ResponsiveAppBar/>
       <HeroSection />
-      <CategoriesSection/>
+      < Poster1/>
       <SectionPostDetails/>
       <QuiltedImageList/>
+      <CategoriesSection/>
       <CounterBar/>
       <Blog/>
       <Footer />

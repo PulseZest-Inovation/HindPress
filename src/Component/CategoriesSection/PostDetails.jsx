@@ -44,8 +44,8 @@ const PostDetails = () => {
             <div className="md:w-1/2 md:pl-6">
               <h2 className="text-4xl font-bold mb-4 text-gray-800">{post.name}</h2>
               <div className="flex justify-start items-center text-gray-700 mb-4 space-x-2">
-                <p className="text-3xl font-bold text-green-600">${post.sellingPrice}</p>
-                <p className="text-xl line-through">${post.actualPrice}</p>
+                <p className="text-3xl font-bold text-green-600">₹{post.sellingPrice}</p>
+                <p className="text-xl line-through">₹{post.actualPrice}</p>
               </div>
               <p className="text-gray-600 mb-4">{post.description}</p>
               <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mt-4 shadow-lg transition duration-300 transform hover:scale-105">
